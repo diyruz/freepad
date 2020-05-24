@@ -53,3 +53,4 @@ CC2530DB/FREEPAD*
 Source/version.c
 !.vscode/
 .vscode/settings.json
+firmwares/*

@@ -200,7 +200,7 @@ uint8 zclFreePadApp_SimpleDescsCount = FREEPAD_BUTTONS_COUNT;
 
 byte zclFreePadApp_KeyCodeToButton(byte key) {
     switch (key) {
-#if defined(HAL_BOARD_FREEPAD_20) || defined(HAL_BOARD_FREEPAD_12) || defined(HAL_BOARD_FREEPAD_8) || defined(HAL_BOARD_FREEPAD_2) 
+#if defined(HAL_BOARD_FREEPAD_20) || defined(HAL_BOARD_FREEPAD_12) || defined(HAL_BOARD_FREEPAD_8) || defined(HAL_BOARD_FREEPAD_3) || defined(HAL_BOARD_FREEPAD_2) || defined(HAL_BOARD_FREEPAD_1)
     case 0x9: // row=4 col=4
         return 1;
     case 0xa: // row=4 col=8

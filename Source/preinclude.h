@@ -45,10 +45,12 @@
 // #define HAL_BOARD_FREEPAD_20
 // #define HAL_BOARD_FREEPAD_12
 // #define HAL_BOARD_FREEPAD_8
+// #define HAL_BOARD_FREEPAD_3
 // #define HAL_BOARD_FREEPAD_2
+// #define HAL_BOARD_FREEPAD_1
 // #define HAL_BOARD_CHDTECH_DEV
 
-#if !defined(HAL_BOARD_FREEPAD_20) && !defined(HAL_BOARD_FREEPAD_12) && !defined(HAL_BOARD_FREEPAD_8) && !defined(HAL_BOARD_FREEPAD_2) && !defined(HAL_BOARD_CHDTECH_DEV)
+#if !defined(HAL_BOARD_FREEPAD_20) && !defined(HAL_BOARD_FREEPAD_12) && !defined(HAL_BOARD_FREEPAD_8) && !defined(HAL_BOARD_FREEPAD_3) && !defined(HAL_BOARD_FREEPAD_2) && !defined(HAL_BOARD_FREEPAD_1) && !defined(HAL_BOARD_CHDTECH_DEV)
 #error "Board type must be defined"
 #endif
 
@@ -60,8 +62,12 @@
 #define FREEPAD_BUTTONS_COUNT 12
 #elif defined(HAL_BOARD_FREEPAD_8)
 #define FREEPAD_BUTTONS_COUNT 8
+#elif defined(HAL_BOARD_FREEPAD_3)
+#define FREEPAD_BUTTONS_COUNT 3
 #elif defined(HAL_BOARD_FREEPAD_2)
 #define FREEPAD_BUTTONS_COUNT 2
+#elif defined(HAL_BOARD_FREEPAD_1)
+#define FREEPAD_BUTTONS_COUNT 1
 #elif defined(HAL_BOARD_CHDTECH_DEV)
 #define FREEPAD_BUTTONS_COUNT 2
 #endif
@@ -74,7 +80,7 @@
 #endif
 #define NWK_MAX_BINDING_ENTRIES (2 * FREEPAD_BUTTONS_COUNT)
 
-#if defined(HAL_BOARD_FREEPAD_20) || defined(HAL_BOARD_FREEPAD_12) || defined(HAL_BOARD_FREEPAD_8) || defined(HAL_BOARD_FREEPAD_2)
+#if defined(HAL_BOARD_FREEPAD_20) || defined(HAL_BOARD_FREEPAD_12) || defined(HAL_BOARD_FREEPAD_8) || defined(HAL_BOARD_FREEPAD_3) || defined(HAL_BOARD_FREEPAD_2) || defined(HAL_BOARD_FREEPAD_1)
     #define HAL_UART FALSE
     #define POWER_SAVING
 #elif defined(HAL_BOARD_CHDTECH_DEV)

@@ -84,7 +84,7 @@ CONST zclAttrRec_t zclFreePadApp_Attrs[][FREEPAD_ATTRS_COUNT] = {
     {{SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_TYPE, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchTypes[1]}},
      {SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_ACTIONS, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchActions[1]}}},
 
-#if defined(HAL_BOARD_FREEPAD_20) || defined(HAL_BOARD_FREEPAD_12) || defined(HAL_BOARD_FREEPAD_8)
+#if defined(HAL_BOARD_FREEPAD_20) || defined(HAL_BOARD_FREEPAD_12) || defined(HAL_BOARD_FREEPAD_8) 
     {{SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_TYPE, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchTypes[2]}},
      {SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_ACTIONS, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchActions[2]}}}
 
@@ -200,7 +200,7 @@ uint8 zclFreePadApp_SimpleDescsCount = FREEPAD_BUTTONS_COUNT;
 
 byte zclFreePadApp_KeyCodeToButton(byte key) {
     switch (key) {
-#if defined(HAL_BOARD_FREEPAD_20) || defined(HAL_BOARD_FREEPAD_12) || defined(HAL_BOARD_FREEPAD_8)
+#if defined(HAL_BOARD_FREEPAD_20) || defined(HAL_BOARD_FREEPAD_12) || defined(HAL_BOARD_FREEPAD_8) || defined(HAL_BOARD_FREEPAD_2) 
     case 0x9: // row=4 col=4
         return 1;
     case 0xa: // row=4 col=8

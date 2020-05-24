@@ -43,6 +43,9 @@
 #elif defined(HAL_BOARD_FREEPAD_8)
 #define HAL_KEY_P0_GPIO_PINS (HAL_KEY_BIT2 | HAL_KEY_BIT3)
 #define HAL_KEY_P0_INPUT_PINS (HAL_KEY_BIT2 | HAL_KEY_BIT3)
+#elif defined(HAL_BOARD_FREEPAD_2)
+#define HAL_KEY_P0_GPIO_PINS (HAL_KEY_BIT2)
+#define HAL_KEY_P0_INPUT_PINS (HAL_KEY_BIT2)
 #elif defined(HAL_BOARD_CHDTECH_DEV)
 #define HAL_KEY_P0_GPIO_PINS (HAL_KEY_BIT1)
 #define HAL_KEY_P1_GPIO_PINS 0x00
@@ -57,7 +60,7 @@
 #define HAL_KEY_P2_INTERRUPT_PINS (HAL_KEY_BIT0)
 #endif
 
-#if defined(HAL_BOARD_FREEPAD_20) || defined(HAL_BOARD_FREEPAD_12) || defined(HAL_BOARD_FREEPAD_8)
+#if defined(HAL_BOARD_FREEPAD_20) || defined(HAL_BOARD_FREEPAD_12) || defined(HAL_BOARD_FREEPAD_8) || defined(HAL_BOARD_FREEPAD_2)
 
 #define HAL_KEY_P1_GPIO_PINS (HAL_KEY_BIT2 | HAL_KEY_BIT3 | HAL_KEY_BIT4 | HAL_KEY_BIT5)
 #define HAL_KEY_P2_GPIO_PINS 0x00
@@ -95,7 +98,7 @@ void HalKeyInit(void) {
     P1SEL &= ~HAL_KEY_P1_GPIO_PINS;
     P2SEL &= ~HAL_KEY_P2_GPIO_PINS;
 
-#if defined(HAL_BOARD_FREEPAD_20) || defined(HAL_BOARD_FREEPAD_12) || defined(HAL_BOARD_FREEPAD_8)
+#if defined(HAL_BOARD_FREEPAD_20) || defined(HAL_BOARD_FREEPAD_12) || defined(HAL_BOARD_FREEPAD_8) || defined(HAL_BOARD_FREEPAD_2)
     /**
      * columns (p1)
      **/
@@ -129,7 +132,7 @@ void HalKeyConfig(bool interruptEnable, halKeyCBack_t cback) {
     P0IEN |= HAL_KEY_P0_INTERRUPT_PINS;
     P1IEN |= HAL_KEY_P1_INTERRUPT_PINS;
     P2IEN |= HAL_KEY_P2_INTERRUPT_PINS;
-#if defined(HAL_BOARD_FREEPAD_20) || defined(HAL_BOARD_FREEPAD_12) || defined(HAL_BOARD_FREEPAD_8)
+#if defined(HAL_BOARD_FREEPAD_20) || defined(HAL_BOARD_FREEPAD_12) || defined(HAL_BOARD_FREEPAD_8) || defined(HAL_BOARD_FREEPAD_2)
     PICTL &= ~HAL_KEY_BIT0; // set rising edge on port 0
                             // enable intrupt on row pins
     IEN1 |= HAL_KEY_BIT5;   // enable port0 int
@@ -143,7 +146,7 @@ void HalKeyConfig(bool interruptEnable, halKeyCBack_t cback) {
 uint8 HalKeyRead(void) {
 
     uint8 key = HAL_KEY_CODE_NOKEY;
-#if defined(HAL_BOARD_FREEPAD_20) || defined(HAL_BOARD_FREEPAD_12) || defined(HAL_BOARD_FREEPAD_8)
+#if defined(HAL_BOARD_FREEPAD_20) || defined(HAL_BOARD_FREEPAD_12) || defined(HAL_BOARD_FREEPAD_8) || defined(HAL_BOARD_FREEPAD_2)
     uint8 row, col;
     row = P0 & HAL_KEY_P0_INPUT_PINS;
 

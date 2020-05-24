@@ -8,6 +8,18 @@
             <name>FREEPADS</name>
             <member>
                 <project>GenericApp</project>
+                <configuration>FREEPAD_1</configuration>
+            </member>
+            <member>
+                <project>GenericApp</project>
+                <configuration>FREEPAD_2</configuration>
+            </member>
+            <member>
+                <project>GenericApp</project>
+                <configuration>FREEPAD_3</configuration>
+            </member>
+            <member>
+                <project>GenericApp</project>
                 <configuration>FREEPAD_8</configuration>
             </member>
             <member>

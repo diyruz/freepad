@@ -1,5 +1,5 @@
-#ifdef HAL_UART
 #include "Debug.h"
+#if defined(HAL_UART) && HAL_UART != FALSE 
 #include "OSAL.h"
 #include "OSAL_Memory.h"
 #define UART_PORT HAL_UART_PORT_0
@@ -46,8 +46,8 @@ void LREP(char *format, ...) {
     va_end(argp);
 }
 #else
-bool DebugInit() {}
-void LREP(char *format, ...) {}
-void LREPMaster(const char *data) {}
-void vprint(const char *fmt, va_list argp) {}
+#include "stdio.h"
+// bool DebugInit() {return TRUE;}
+// void LREP(char *format, ...) {}
+// void LREPMaster(const char *data) {}
 #endif

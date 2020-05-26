@@ -31,12 +31,17 @@
   (byte & 0x02 ? '1' : '0'), \
   (byte & 0x01 ? '1' : '0') 
 
+#if defined(HAL_UART) && HAL_UART != FALSE
 extern halUARTCfg_t halUARTConfig;
-
 extern bool DebugInit(void);
 extern void LREP(char *format, ...);
 extern void LREPMaster(const char *data);
-
 void vprint(const char *fmt, va_list argp);
+#else
+ 
+#define DebugInit() asm("nop")
+#define LREP(f_, ...) printf((f_), __VA_ARGS__)
+#define LREPMaster(msg) printf(msg)
+#endif
 
 #endif

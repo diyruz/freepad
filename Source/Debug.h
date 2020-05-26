@@ -38,8 +38,13 @@ extern void LREPMaster(const char *data);
 void vprint(const char *fmt, va_list argp);
 #else
 #define DebugInit() asm("nop")
+#ifdef DEBUG_PRINTF
 #define LREP(f_, ...) printf((f_), __VA_ARGS__)
 #define LREPMaster(msg) printf(msg)
+#else
+#define LREP(f_, ...) asm("nop")
+#define LREPMaster(msg) asm("nop")
+#endif
 #endif
 
 #endif

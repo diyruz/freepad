@@ -160,7 +160,7 @@ void zclFreePadApp_Init(byte task_id) {
     // this allows power saving, PM2
     osal_pwrmgr_task_state(zclFreePadApp_TaskID, PWRMGR_CONSERVE);
 
-    LREP("Battery voltage=%d prc=%d \r\n", getBatteryVoltage(), getBatteryRemainingPercentageZCL());
+    LREP("Battery voltageZCL=%d prc=%d voltage=%d\r\n", getBatteryVoltageZCL(), getBatteryRemainingPercentageZCL(), getBatteryVoltage());
     ZMacSetTransmitPower(TX_PWR_PLUS_4); // set 4dBm
 }
 
@@ -542,7 +542,7 @@ static void zclFreePadApp_BindNotification(bdbBindNotificationData_t *data) {
 }
 
 static void zclFreePadApp_ReportBattery(void) {
-    zclFreePadApp_BatteryVoltage = getBatteryVoltage();
+    zclFreePadApp_BatteryVoltage = getBatteryVoltageZCL();
     zclFreePadApp_BatteryPercentageRemainig = getBatteryRemainingPercentageZCL();
     bdb_RepChangedAttrValue(1, ZCL_CLUSTER_ID_GEN_POWER_CFG, ATTRID_POWER_CFG_BATTERY_PERCENTAGE_REMAINING);
 }

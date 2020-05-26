@@ -162,7 +162,6 @@ void zclFreePadApp_Init(byte task_id) {
 
     
     ZMacSetTransmitPower(TX_PWR_PLUS_4); // set 4dBm
-    zclFreePadApp_ReportBattery();
 }
 
 static void zclFreePadApp_ResetBackoffRetry(void) {

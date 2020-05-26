@@ -104,7 +104,7 @@ static zclGeneral_AppCallbacks_t zclFreePadApp_CmdCallbacks = {
 // static CONST zclAttrRec_t attrs[FREEPAD_BUTTONS_COUNT];
 
 static void zclFreePadApp_BasicResetCB(void) {
-    LREP("zclFreePadApp_BasicResetCB\r\n");
+    LREPMaster("zclFreePadApp_BasicResetCB\r\n");
     zclFreePadApp_ResetAttributesToDefaultValues();
     zclFreePadApp_SaveAttributesToNV();
 }
@@ -160,8 +160,9 @@ void zclFreePadApp_Init(byte task_id) {
     // this allows power saving, PM2
     osal_pwrmgr_task_state(zclFreePadApp_TaskID, PWRMGR_CONSERVE);
 
-    LREP("Battery voltageZCL=%d prc=%d voltage=%d\r\n", getBatteryVoltageZCL(), getBatteryRemainingPercentageZCL(), getBatteryVoltage());
+    
     ZMacSetTransmitPower(TX_PWR_PLUS_4); // set 4dBm
+    zclFreePadApp_ReportBattery();
 }
 
 static void zclFreePadApp_ResetBackoffRetry(void) {
@@ -182,7 +183,7 @@ static void zclFreePadApp_ProcessCommissioningStatus(bdbCommissioningModeMsg_t *
     case BDB_COMMISSIONING_INITIALIZATION:
         switch (bdbCommissioningModeMsg->bdbCommissioningStatus) {
         case BDB_COMMISSIONING_NO_NETWORK:
-            LREP("No network\r\n");
+            LREPMaster("No network\r\n");
             HalLedBlink(HAL_LED_1, 3, 50, 500);
             break;
         case BDB_COMMISSIONING_NETWORK_RESTORED:
@@ -544,6 +545,7 @@ static void zclFreePadApp_BindNotification(bdbBindNotificationData_t *data) {
 static void zclFreePadApp_ReportBattery(void) {
     zclFreePadApp_BatteryVoltage = getBatteryVoltageZCL();
     zclFreePadApp_BatteryPercentageRemainig = getBatteryRemainingPercentageZCL();
+    LREP("Battery voltageZCL=%d prc=%d voltage=%d\r\n", zclFreePadApp_BatteryVoltage, zclFreePadApp_BatteryPercentageRemainig, getBatteryVoltage());
     bdb_RepChangedAttrValue(1, ZCL_CLUSTER_ID_GEN_POWER_CFG, ATTRID_POWER_CFG_BATTERY_PERCENTAGE_REMAINING);
 }
 

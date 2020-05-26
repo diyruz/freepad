@@ -46,7 +46,7 @@ void LREP(char *format, ...) {
     va_end(argp);
 }
 #else
-#include "stdio.h"
+
 // bool DebugInit() {return TRUE;}
 // void LREP(char *format, ...) {}
 // void LREPMaster(const char *data) {}

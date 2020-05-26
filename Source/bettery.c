@@ -17,5 +17,5 @@ Specifies the remaining battery life as a half integer percentage of the full ba
 with a range between zero and 100%, with 0x00 = 0%, 0x64 = 50%, and 0xC8 = 100%.
 ***/
 uint8 getBatteryRemainingPercentageZCL(void) { 
-    return 200 * (uint8) ((getBatteryVoltage() - MIN_VOLTAGE) / (MAX_VOLTAGE - MIN_VOLTAGE));
+    return (uint8) ((((float)(getBatteryVoltage() - MIN_VOLTAGE)) * 200.0) / ((float) (MAX_VOLTAGE - MIN_VOLTAGE)));
 }

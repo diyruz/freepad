@@ -78,7 +78,6 @@ static void zclFreePadApp_Rejoin(void);
 static void zclFreePadApp_SendButtonPress(uint8 endPoint, byte clicksCount);
 static void zclFreePadApp_ProcessCommissioningStatus(bdbCommissioningModeMsg_t *bdbCommissioningModeMsg);
 static void zclFreePadApp_SendKeys(byte keyCode, byte pressCount, byte pressTime);
-static void zclFreePadApp_ProcessIncomingMsg(zclIncomingMsg_t *pInMsg);
 static void zclFreePadApp_ResetBackoffRetry(void);
 static void zclFreePadApp_OnConnect(void);
 static void zclFreePadApp_BasicResetCB(void);
@@ -114,7 +113,7 @@ this is workaround, since we don't have CB after attribute write, we will hack i
 and save attributes few secons later
 */
 static ZStatus_t zclFreePadApp_ReadWriteAuthCB(afAddrType_t *srcAddr, zclAttrRec_t *pAttr, uint8 oper) {
-    LREP("AUTH CB called %x %x %x\r\n", srcAddr->addr, pAttr->attr, pAttr->clusterID);
+    LREPMaster("AUTH CB called\r\n");
 
     osal_start_timerEx(zclFreePadApp_TaskID, FREEPADAPP_SAVE_ATTRS_EVT, 2000);
     return ZSuccess;
@@ -162,6 +161,7 @@ void zclFreePadApp_Init(byte task_id) {
 
     
     ZMacSetTransmitPower(TX_PWR_PLUS_4); // set 4dBm
+    //zclFreePadApp_ReportBattery();
 }
 
 static void zclFreePadApp_ResetBackoffRetry(void) {
@@ -315,13 +315,6 @@ static void zclFreePadApp_SendKeys(byte keyCode, byte pressCount, bool isRelease
     }
 }
 
-static void zclFreePadApp_ProcessIncomingMsg(zclIncomingMsg_t *pInMsg) {
-    LREP("ZCL_INCOMING_MSG srcAddr=0x%X endPoint=0x%X clusterId=0x%X commandID=0x%X %d\r\n", pInMsg->srcAddr, pInMsg->endPoint,
-         pInMsg->clusterId, pInMsg->zclHdr.commandID, pInMsg->zclHdr.commandID);
-
-    if (pInMsg->attrCmd)
-        osal_mem_free(pInMsg->attrCmd);
-}
 uint16 zclFreePadApp_event_loop(uint8 task_id, uint16 events) {
     afIncomingMSGPacket_t *MSGpkt;
 
@@ -342,10 +335,6 @@ uint16 zclFreePadApp_event_loop(uint8 task_id, uint16 events) {
                 if (zclFreePadApp_NwkState == DEV_END_DEVICE) {
                     HalLedSet(HAL_LED_1, HAL_LED_MODE_OFF);
                 }
-                break;
-
-            case ZCL_INCOMING_MSG:
-                zclFreePadApp_ProcessIncomingMsg((zclIncomingMsg_t *)MSGpkt);
                 break;
 
             case AF_DATA_CONFIRM_CMD:
@@ -535,21 +524,21 @@ static void zclFreePadApp_HandleKeys(byte shift, byte keyCode) {
 
 static void zclFreePadApp_BindNotification(bdbBindNotificationData_t *data) {
     HalLedSet(HAL_LED_1, HAL_LED_MODE_BLINK);
-    LREP("Recieved bind request clusterId=0x%X dstAddr=0x%X \r\n", data->clusterId, data->dstAddr);
+    LREPMaster("Recieved bind request\r\n");
     uint16 maxEntries = 0, usedEntries = 0;
     bindCapacity(&maxEntries, &usedEntries);
-    LREP("bindCapacity %d %usedEntries %d \r\n", maxEntries, usedEntries);
+    LREP("bindCapacity %d usedEntries %d \r\n", maxEntries, usedEntries);
 }
 
 static void zclFreePadApp_ReportBattery(void) {
     zclFreePadApp_BatteryVoltage = getBatteryVoltageZCL();
     zclFreePadApp_BatteryPercentageRemainig = getBatteryRemainingPercentageZCL();
     LREP("Battery voltageZCL=%d prc=%d voltage=%d\r\n", zclFreePadApp_BatteryVoltage, zclFreePadApp_BatteryPercentageRemainig, getBatteryVoltage());
-    bdb_RepChangedAttrValue(1, ZCL_CLUSTER_ID_GEN_POWER_CFG, ATTRID_POWER_CFG_BATTERY_PERCENTAGE_REMAINING);
+    bdb_RepChangedAttrValue(1, ZCL_CLUSTER_ID_GEN_POWER_CFG, ATTRID_POWER_CFG_BATTERY_PERCENTAGE_REMAINING); 
 }
 
 static void zclFreePadApp_RestoreAttributesFromNV(void) {
-    LREPMaster("Restoring attributes to NV size=%d \r\n");
+    LREPMaster("Restoring attributes to NV\r\n");
 
     if (osal_nv_item_init(FREEPAD_NW_SWITCH_ACTIONS, FREEPAD_BUTTONS_COUNT, &zclFreePadApp_SwitchActions) == ZSuccess) {
         if (osal_nv_read(FREEPAD_NW_SWITCH_ACTIONS, 0, FREEPAD_BUTTONS_COUNT, &zclFreePadApp_SwitchActions) != ZSuccess) {

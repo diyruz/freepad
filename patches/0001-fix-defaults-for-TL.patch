@@ -1,0 +1,29 @@
+From 560dee0a02babf11a2583bab4843faee75dca929 Mon Sep 17 00:00:00 2001
+From: nur <nur.php@gmail.com>
+Date: Tue, 26 May 2020 16:25:34 +0800
+Subject: [PATCH] fix defaults for TL
+
+---
+ Components/stack/bdb/bdb_interface.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Components/stack/bdb/bdb_interface.h b/Components/stack/bdb/bdb_interface.h
+index 2cb5d99..be0baba 100644
+--- a/Components/stack/bdb/bdb_interface.h
++++ b/Components/stack/bdb/bdb_interface.h
+@@ -182,10 +182,10 @@ extern "C"
+ // For certification only:
+ #define TOUCHLINK_ENC_KEY  TOUCHLINK_CERTIFICATION_ENC_KEY
+ #define TOUCHLINK_LINK_KEY  TOUCHLINK_CERTIFICATION_LINK_KEY
+-#define TOUCHLINK_KEY_INDEX TOUCHLINK_KEY_INDEX_CERT
++#define TOUCHLINK_KEY_INDEX TOUCHLINK_KEY_INDEX_MASTER
+ 
+ // For internal EP's simple descriptor
+-#define TOUCHLINK_INTERNAL_ENDPOINT                             13
++#define TOUCHLINK_INTERNAL_ENDPOINT                             42
+ #define TOUCHLINK_INTERNAL_DEVICE_ID                            0xE15E
+ #define TOUCHLINK_INTERNAL_FLAGS                                0
+ #define TOUCHLINK_DEFAULT_IDENTIFY_TIME                         3
+-- 
+2.24.2 (Apple Git-127)
+

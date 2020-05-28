@@ -15,7 +15,7 @@
         <Placement>_ 1238 679 2122 1219</Placement>
     </BreakpointUsageDialog>
     <DebugChecksum>
-        <Checksum>886869360</Checksum>
+        <Checksum>414219081</Checksum>
     </DebugChecksum>
     <CallStack>
         <ShowArgs>0</ShowArgs>
@@ -77,7 +77,9 @@
         <FreqHi>0</FreqHi>
     </Simulator>
     <Breakpoints>
-        <Count>0</Count>
+        <Bp0>_ "STD_CODE" "{C:\Z-Stack 3.0.2\Components\stack\bdb\bdb_Reporting.c}.2241.7" 1 0 0 0 "" 0 ""</Bp0>
+        <Bp1>_ "STD_CODE" "{C:\Z-Stack 3.0.2\Components\stack\bdb\bdb_Reporting.c}.2258.3" 1 0 0 0 "" 0 ""</Bp1>
+        <Count>2</Count>
     </Breakpoints>
     <ChipconEmu>
         <StopTimersOnHalt>0</StopTimersOnHalt>

@@ -159,9 +159,8 @@ void zclFreePadApp_Init(byte task_id) {
     // this allows power saving, PM2
     osal_pwrmgr_task_state(zclFreePadApp_TaskID, PWRMGR_CONSERVE);
 
-    
     ZMacSetTransmitPower(TX_PWR_PLUS_4); // set 4dBm
-    //zclFreePadApp_ReportBattery();
+    // zclFreePadApp_ReportBattery();
 }
 
 static void zclFreePadApp_ResetBackoffRetry(void) {
@@ -169,10 +168,7 @@ static void zclFreePadApp_ResetBackoffRetry(void) {
     rejoinDelay = FREEPADAPP_END_DEVICE_REJOIN_START_DELAY;
 }
 
-static void zclFreePadApp_OnConnect(void) {
-    zclFreePadApp_ResetBackoffRetry();
-    osal_start_timerEx(zclFreePadApp_TaskID, FREEPADAPP_REPORT_EVT, FREEPADAPP_CONST_ONE_MINUTE_IN_MS); // 1 minute
-}
+static void zclFreePadApp_OnConnect(void) { zclFreePadApp_ResetBackoffRetry(); }
 
 static void zclFreePadApp_ProcessCommissioningStatus(bdbCommissioningModeMsg_t *bdbCommissioningModeMsg) {
     LREP("bdbCommissioningMode=%d bdbCommissioningStatus=%d bdbRemainingCommissioningModes=0x%X\r\n",
@@ -481,7 +477,7 @@ static void zclFreePadApp_HandleKeys(byte shift, byte keyCode) {
             resetHoldTime = resetHoldTime >> 2;
             TLHoldTime = TLHoldTime >> 2;
         }
-    
+
         LREP("resetHoldTime %ld TLHoldTime=%ld\r\n", resetHoldTime, TLHoldTime);
         switch (button) {
         case 1:
@@ -524,17 +520,22 @@ static void zclFreePadApp_HandleKeys(byte shift, byte keyCode) {
 
 static void zclFreePadApp_BindNotification(bdbBindNotificationData_t *data) {
     HalLedSet(HAL_LED_1, HAL_LED_MODE_BLINK);
-    LREPMaster("Recieved bind request\r\n");
+    LREP("Recieved bind request clusterId=%d \r\n", data->clusterId);
     uint16 maxEntries = 0, usedEntries = 0;
     bindCapacity(&maxEntries, &usedEntries);
     LREP("bindCapacity %d usedEntries %d \r\n", maxEntries, usedEntries);
+
+    if (data->clusterId == ZCL_CLUSTER_ID_GEN_POWER_CFG) {
+        osal_start_timerEx(zclFreePadApp_TaskID, FREEPADAPP_REPORT_EVT, 1000);
+    }
 }
 
 static void zclFreePadApp_ReportBattery(void) {
     zclFreePadApp_BatteryVoltage = getBatteryVoltageZCL();
     zclFreePadApp_BatteryPercentageRemainig = getBatteryRemainingPercentageZCL();
-    LREP("Battery voltageZCL=%d prc=%d voltage=%d\r\n", zclFreePadApp_BatteryVoltage, zclFreePadApp_BatteryPercentageRemainig, getBatteryVoltage());
-    bdb_RepChangedAttrValue(1, ZCL_CLUSTER_ID_GEN_POWER_CFG, ATTRID_POWER_CFG_BATTERY_PERCENTAGE_REMAINING); 
+    LREP("Battery voltageZCL=%d prc=%d voltage=%d\r\n", zclFreePadApp_BatteryVoltage, zclFreePadApp_BatteryPercentageRemainig,
+         getBatteryVoltage());
+    bdb_RepChangedAttrValue(1, ZCL_CLUSTER_ID_GEN_POWER_CFG, ATTRID_POWER_CFG_BATTERY_PERCENTAGE_REMAINING);
 }
 
 static void zclFreePadApp_RestoreAttributesFromNV(void) {

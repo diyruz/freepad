@@ -76,15 +76,6 @@
         <Freq>50000000</Freq>
         <FreqHi>0</FreqHi>
     </Simulator>
-    <Breakpoints>
-        <Bp0>_ "STD_CODE" "{C:\Z-Stack 3.0.2\Components\stack\bdb\bdb_Reporting.c}.2241.7" 1 0 0 0 "" 0 ""</Bp0>
-        <Bp1>_ "STD_CODE" "{C:\Z-Stack 3.0.2\Components\stack\bdb\bdb_Reporting.c}.2258.3" 1 0 0 0 "" 0 ""</Bp1>
-        <Count>2</Count>
-    </Breakpoints>
-    <ChipconEmu>
-        <StopTimersOnHalt>0</StopTimersOnHalt>
-        <LeaveTargetRunning>1</LeaveTargetRunning>
-    </ChipconEmu>
     <LogFile>
         <LoggingEnabled>_ 0</LoggingEnabled>
         <LogFile>_ ""</LogFile>
@@ -94,6 +85,15 @@
         <LoggingEnabled>_ 0</LoggingEnabled>
         <LogFile>_ ""</LogFile>
     </TermIOLog>
+    <Breakpoints>
+        <Bp0>_ "STD_CODE" "{C:\Z-Stack 3.0.2\Components\stack\bdb\bdb_Reporting.c}.2241.6" 1 0 0 0 "" 0 ""</Bp0>
+        <Bp1>_ "STD_CODE" "{C:\Z-Stack 3.0.2\Components\stack\bdb\bdb_Reporting.c}.2258.3" 1 0 0 0 "" 0 ""</Bp1>
+        <Count>2</Count>
+    </Breakpoints>
+    <ChipconEmu>
+        <StopTimersOnHalt>0</StopTimersOnHalt>
+        <LeaveTargetRunning>1</LeaveTargetRunning>
+    </ChipconEmu>
     <Aliases>
         <Count>0</Count>
         <SuppressDialog>0</SuppressDialog>

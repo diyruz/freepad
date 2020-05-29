@@ -152,7 +152,13 @@ void zclFreePadApp_Init(byte task_id) {
     bdb_RegisterCommissioningStatusCB(zclFreePadApp_ProcessCommissioningStatus);
     touchLinkInitiator_RegisterNotifyTLCB(zclFreePadApp_TL_NotifyCb);
 
-    bdb_StartCommissioning(BDB_COMMISSIONING_REJOIN_EXISTING_NETWORK_ON_STARTUP);
+    if (zgReadStartupOptions() & ZCD_STARTOPT_DEFAULT_NETWORK_STATE) {
+        LREPMaster("BDB_COMMISSIONING_MODE_NWK_STEERING\r\n");
+        bdb_StartCommissioning(BDB_COMMISSIONING_MODE_NWK_STEERING);
+    } else {
+        LREPMaster("BDB_COMMISSIONING_REJOIN_EXISTING_NETWORK_ON_STARTUP\r\n");
+        bdb_StartCommissioning(BDB_COMMISSIONING_REJOIN_EXISTING_NETWORK_ON_STARTUP);
+    }
 
     LREP("Started build %s \r\n", zclFreePadApp_DateCodeNT);
     osal_start_reload_timer(zclFreePadApp_TaskID, FREEPADAPP_REPORT_EVT, FREEPADAPP_REPORT_DELAY);
@@ -407,13 +413,7 @@ uint16 zclFreePadApp_event_loop(uint8 task_id, uint16 events) {
 static void zclFreePadApp_Rejoin(void) {
     LREPMaster("Recieved rejoin command\r\n");
     HalLedSet(HAL_LED_1, HAL_LED_MODE_FLASH);
-    if (bdbAttributes.bdbNodeIsOnANetwork) {
-        LREPMaster("Reset to FN\r\n");
-        bdb_resetLocalAction();
-    } else {
-        LREPMaster("StartCommissioning STEEREING\r\n");
-        bdb_StartCommissioning(BDB_COMMISSIONING_MODE_NWK_STEERING);
-    }
+    bdb_resetLocalAction();
 }
 
 static void zclFreePadApp_SendButtonPress(uint8 endPoint, uint8 clicksCount) {

@@ -14,7 +14,7 @@ bool DebugInit() {
                                              // reaches maxRxBufSize
     halUARTConfig.idleTimeout = 10;          // this parameter indicates rx timeout period in millisecond
     halUARTConfig.rx.maxBufSize = 0;
-    halUARTConfig.tx.maxBufSize = BUFFLEN;
+    halUARTConfig.tx.maxBufSize = BUFFLEN >> 1;
     halUARTConfig.intEnable = TRUE;
     halUARTConfig.callBackFunc = HalUARTCback;
     HalUARTInit();

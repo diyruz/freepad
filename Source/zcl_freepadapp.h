@@ -72,18 +72,13 @@ extern SimpleDescriptionFormat_t zclFreePadApp_SimpleDescs[];
 extern uint8 zclFreePadApp_SimpleDescsCount;
 extern uint8 zclFreePadApp_BatteryVoltage;
 extern uint8 zclFreePadApp_BatteryPercentageRemainig;
-extern CONST zclCommandRec_t zclFreePadApp_Cmds[];
 
-extern CONST uint8 zclCmdsArraySize;
 
 // attribute list
 extern CONST zclAttrRec_t zclFreePadApp_Attrs[][FREEPAD_ATTRS_COUNT];
 extern CONST zclAttrRec_t zclFreePadApp_AttrsFirstEP[];
 extern CONST uint8 zclFreePadApp_AttrsFirstEPCount;
 
-extern const uint8 zclFreePadApp_ManufacturerName[];
-extern const uint8 zclFreePadApp_ModelId[];
-extern const uint8 zclFreePadApp_PowerSource;
 
 // FREEPADAPP_TODO: Declare application specific attributes here
 

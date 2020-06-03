@@ -14,9 +14,7 @@
 3. If join failed, device will flash led 3 times
 
 # How to use touch link
-1. Bring you remote near to TL device
-2. Hold button (2) for 5 seconds
-TL funtionality can work without connecting to network
+ Deprecated due to memory issues, you can use `FREEPAD_ENABLE_TL` macros if you want to compile with TL functionality
 
 
 # What's button mapping?
@@ -39,11 +37,15 @@ Values are:
 
 `ON_OFF_SWITCH_TYPE_MOMENTARY` (0) -> no delay, but no multiple clicks, only single
 
-`mosquitto_pub -t "zigbee2mqtt/FN/BUTTON_NUM/set/switch_type" -m '0'`
+```bash
+mosquitto_pub -t "zigbee2mqtt/FN/BUTTON_NUM/set/switch_type" -m '0'
+```
 
 `ON_OFF_SWITCH_TYPE_MULTIFUNCTION` (2) -> 300ms delay, full set of clicks
 
-`mosquitto_pub -t "zigbee2mqtt/FN/BUTTON_NUM/set/switch_type" -m '2'` (default)
+```bash
+mosquitto_pub -t "zigbee2mqtt/FN/BUTTON_NUM/set/switch_type" -m '2'
+```
 
 
 # ONOFF cluster binding
@@ -53,12 +55,18 @@ Change `ZCL_CLUSTER_ID_GEN_ON_OFF_SWITCH_CONFIG` clusters attribute `ATTRID_ON_O
 
 `ON_OFF_SWITCH_ACTIONS_ON`
 
-`mosquitto_pub -t "zigbee2mqtt/FN/BUTTON_NUM/set/switch_actions" -m '0'`
+```bash
+mosquitto_pub -t "zigbee2mqtt/FN/BUTTON_NUM/set/switch_actions" -m '0'
+```
 
 `ON_OFF_SWITCH_ACTIONS_OFF`
 
-`mosquitto_pub -t "zigbee2mqtt/FN/BUTTON_NUM/set/switch_actions" -m '1'`
+```bash
+mosquitto_pub -t "zigbee2mqtt/FN/BUTTON_NUM/set/switch_actions" -m '1'
+```
 
 `ON_OFF_SWITCH_ACTIONS_TOGGLE` (default value)
 
-`mosquitto_pub -t "zigbee2mqtt/FN/BUTTON_NUM/set/switch_actions" -m '2'`
+```bash
+mosquitto_pub -t "zigbee2mqtt/FN/BUTTON_NUM/set/switch_actions" -m '2'
+```

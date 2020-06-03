@@ -17,9 +17,10 @@
 
 #include "bdb.h"
 #include "bdb_interface.h"
+#ifdef FREEPAD_ENABLE_TL
 #include "bdb_touchlink.h"
 #include "bdb_touchlink_initiator.h"
-#include "gp_interface.h"
+#endif
 
 #include "Debug.h"
 
@@ -84,9 +85,10 @@ static void zclFreePadApp_BasicResetCB(void);
 static ZStatus_t zclFreePadApp_ReadWriteAuthCB(afAddrType_t *srcAddr, zclAttrRec_t *pAttr, uint8 oper);
 static void zclFreePadApp_SaveAttributesToNV(void);
 static void zclFreePadApp_RestoreAttributesFromNV(void);
+#ifdef FREEPAD_ENABLE_TL
 static void zclFreePadApp_StartTL(void);
 ZStatus_t zclFreePadApp_TL_NotifyCb(epInfoRec_t *pData);
-
+#endif
 /*********************************************************************
  * ZCL General Profile Callback table
  */
@@ -150,7 +152,9 @@ void zclFreePadApp_Init(byte task_id) {
 
     bdb_RegisterBindNotificationCB(zclFreePadApp_BindNotification);
     bdb_RegisterCommissioningStatusCB(zclFreePadApp_ProcessCommissioningStatus);
+#ifdef FREEPAD_ENABLE_TL
     touchLinkInitiator_RegisterNotifyTLCB(zclFreePadApp_TL_NotifyCb);
+#endif
 
     if (zgReadStartupOptions() & ZCD_STARTOPT_DEFAULT_NETWORK_STATE) {
         LREPMaster("BDB_COMMISSIONING_MODE_NWK_STEERING\r\n");
@@ -398,14 +402,14 @@ uint16 zclFreePadApp_event_loop(uint8 task_id, uint16 events) {
         zclFreePadApp_SaveAttributesToNV();
         return (events ^ FREEPADAPP_SAVE_ATTRS_EVT);
     }
-
+#ifdef FREEPAD_ENABLE_TL
     if (events & FREEPADAPP_TL_START_EVT) {
         LREPMaster("FREEPADAPP_TL_START_EVT\r\n");
         HalLedSet(HAL_LED_1, HAL_LED_MODE_FLASH);
         zclFreePadApp_StartTL();
         return (events ^ FREEPADAPP_TL_START_EVT);
     }
-
+#endif
     // Discard unknown events
     return 0;
 }
@@ -445,7 +449,9 @@ static void zclFreePadApp_HandleKeys(byte shift, byte keyCode) {
 
     if (keyCode == HAL_KEY_CODE_RELEASE_KEY) {
         osal_stop_timerEx(zclFreePadApp_TaskID, FREEPADAPP_RESET_EVT);
+#ifdef FREEPAD_ENABLE_TL
         osal_stop_timerEx(zclFreePadApp_TaskID, FREEPADAPP_TL_START_EVT);
+#endif
         byte prevButton = zclFreePadApp_KeyCodeToButton(currentKeyCode);
         uint8 prevSwitchType = zclFreePadApp_SwitchTypes[prevButton - 1];
 
@@ -483,10 +489,11 @@ static void zclFreePadApp_HandleKeys(byte shift, byte keyCode) {
         case 1:
             osal_start_timerEx(zclFreePadApp_TaskID, FREEPADAPP_RESET_EVT, resetHoldTime);
             break;
-
+#ifdef FREEPAD_ENABLE_TL
         case 2:
             osal_start_timerEx(zclFreePadApp_TaskID, FREEPADAPP_TL_START_EVT, TLHoldTime);
             break;
+#endif
 
         default:
             break;
@@ -562,6 +569,7 @@ static void zclFreePadApp_SaveAttributesToNV(void) {
     }
 }
 
+#ifdef FREEPAD_ENABLE_TL
 static void zclFreePadApp_StartTL(void) {
     LREPMaster("zclFreePadApp_StartTL\r\n");
     touchLinkInitiator_StartDevDisc();
@@ -571,5 +579,6 @@ ZStatus_t zclFreePadApp_TL_NotifyCb(epInfoRec_t *pData) {
     LREPMaster("zclFreePadApp_TL_NotifyCb\r\n");
     return touchLinkInitiator_ResetToFNSelectedTarget();
 }
+#endif
 /****************************************************************************
 ****************************************************************************/

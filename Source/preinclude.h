@@ -7,7 +7,7 @@
 // #define TOUCHLINK_INTERNAL_ENDPOINT 42
 
 #define TP2_LEGACY_ZC
-//patch sdk
+// patch sdk
 // #define ZDSECMGR_TC_ATTEMPT_DEFAULT_KEY TRUE
 
 #define NWK_AUTO_POLL
@@ -20,8 +20,11 @@
 #define ZCL_ON_OFF
 #define ZCL_LEVEL_CTRL
 #define ZCL_REPORTING_DEVICE
+
+#ifdef FREEPAD_ENABLE_TL
 #define INTER_PAN
 #define BDB_TL_INITIATOR
+#endif
 
 #define ZSTACK_DEVICE_BUILD (DEVICE_BUILD_ENDDEVICE)
 
@@ -41,8 +44,7 @@
 #define HAL_LCD FALSE
 #define BLINK_LEDS TRUE
 
-
-//one of this boards
+// one of this boards
 // #define HAL_BOARD_FREEPAD_20
 // #define HAL_BOARD_FREEPAD_12
 // #define HAL_BOARD_FREEPAD_8
@@ -51,11 +53,10 @@
 // #define HAL_BOARD_FREEPAD_1
 // #define HAL_BOARD_CHDTECH_DEV
 
-#if !defined(HAL_BOARD_FREEPAD_20) && !defined(HAL_BOARD_FREEPAD_12) && !defined(HAL_BOARD_FREEPAD_8) && !defined(HAL_BOARD_FREEPAD_3) && !defined(HAL_BOARD_FREEPAD_2) && !defined(HAL_BOARD_FREEPAD_1) && !defined(HAL_BOARD_CHDTECH_DEV)
+#if !defined(HAL_BOARD_FREEPAD_20) && !defined(HAL_BOARD_FREEPAD_12) && !defined(HAL_BOARD_FREEPAD_8) && !defined(HAL_BOARD_FREEPAD_3) &&  \
+    !defined(HAL_BOARD_FREEPAD_2) && !defined(HAL_BOARD_FREEPAD_1) && !defined(HAL_BOARD_CHDTECH_DEV)
 #error "Board type must be defined"
 #endif
-
-
 
 #ifdef HAL_BOARD_FREEPAD_20
 #define FREEPAD_BUTTONS_COUNT 20
@@ -73,25 +74,22 @@
 #define FREEPAD_BUTTONS_COUNT 2
 #endif
 
-
-
-
 #ifdef NWK_MAX_BINDING_ENTRIES
-    #undef NWK_MAX_BINDING_ENTRIES
+#undef NWK_MAX_BINDING_ENTRIES
 #endif
 #define NWK_MAX_BINDING_ENTRIES MAX(10, ((2 * FREEPAD_BUTTONS_COUNT)))
 
 #undef APS_MAX_GROUPS
 #define APS_MAX_GROUPS 1
 
-#if defined(HAL_BOARD_FREEPAD_20) || defined(HAL_BOARD_FREEPAD_12) || defined(HAL_BOARD_FREEPAD_8) || defined(HAL_BOARD_FREEPAD_3) || defined(HAL_BOARD_FREEPAD_2) || defined(HAL_BOARD_FREEPAD_1)
-    #define HAL_UART FALSE
-    #define POWER_SAVING
+#if defined(HAL_BOARD_FREEPAD_20) || defined(HAL_BOARD_FREEPAD_12) || defined(HAL_BOARD_FREEPAD_8) || defined(HAL_BOARD_FREEPAD_3) ||      \
+    defined(HAL_BOARD_FREEPAD_2) || defined(HAL_BOARD_FREEPAD_1)
+#define HAL_UART FALSE
+#define POWER_SAVING
 #elif defined(HAL_BOARD_CHDTECH_DEV)
-    #define HAL_UART TRUE
-    #define HAL_UART_ISR 2
-    #define HAL_UART_DMA 1
+#define HAL_UART TRUE
+#define HAL_UART_ISR 2
+#define HAL_UART_DMA 1
 #endif
-
 
 #include "hal_board_cfg.h"

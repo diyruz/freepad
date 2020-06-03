@@ -2,14 +2,23 @@
 #include "hal_adc.h"
 #define MIN_VOLTAGE (uint16) 2000
 #define MAX_VOLTAGE (uint16) 3300
-/* (( 3 * 1.15 ) / (( Math.pow(2,14) / 2 ) - 1 )) * 1000  */
-#define MULTI ((float)0.4211939934073983)
 
-uint8 getBatteryVoltageZCL(void) { return (uint8)(getBatteryVoltage() / 100); }
+uint8 getBatteryVoltageZCL(void) { 
+  uint16 volt16 = getBatteryVoltage();
+  uint8  volt8  = (uint8)(volt16 / 100);
+  if ((volt16-(volt8*100)) > 50){
+    return volt8+1;
+  }else{
+    return volt8; 
+  }
+}
 
 uint16 getBatteryVoltage(void) {
-    HalAdcSetReference(HAL_ADC_REF_125V);
-    return (uint16)(HalAdcRead(HAL_ADC_CHANNEL_VDD, HAL_ADC_RESOLUTION_14) * MULTI);
+  HalAdcSetReference(HAL_ADC_REF_125V);
+  // for 1.9V ADC 4428, for 3.3V ADC 7608 // ((7608-4428)/(3300-1900))=2.271
+  float result = 0;
+  result = 1900+((HalAdcRead (HAL_ADC_CHANNEL_VDD, HAL_ADC_RESOLUTION_14)-4428)/2.271);
+  return (uint16)result;
 }
 
 /***
@@ -17,5 +26,10 @@ Specifies the remaining battery life as a half integer percentage of the full ba
 with a range between zero and 100%, with 0x00 = 0%, 0x64 = 50%, and 0xC8 = 100%.
 ***/
 uint8 getBatteryRemainingPercentageZCL(void) { 
-    return (uint8) ((((float)(getBatteryVoltage() - MIN_VOLTAGE)) * 200.0) / ((float) (MAX_VOLTAGE - MIN_VOLTAGE)));
+  uint16 volt16 = getBatteryVoltage();
+  if ( volt16 >= MIN_VOLTAGE) {
+    return (uint8) ((((float)(volt16 - MIN_VOLTAGE)) * 200.0) / ((float) (MAX_VOLTAGE - MIN_VOLTAGE)));
+  } else {
+    return 0;
+  }
 }

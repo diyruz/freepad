@@ -1,7 +1,6 @@
 #define TC_LINKKEY_JOIN
 #define NV_INIT
 #define NV_RESTORE
-#define INT_HEAP_LEN 2688
 // to make TL work, need patch this macroses in SDK
 // #define TOUCHLINK_KEY_INDEX TOUCHLINK_KEY_INDEX_MASTER
 // #define TOUCHLINK_INTERNAL_ENDPOINT 42
@@ -87,9 +86,14 @@
 #define HAL_UART FALSE
 #define POWER_SAVING
 #elif defined(HAL_BOARD_CHDTECH_DEV)
+#define DO_DEBUG
+#endif
+
+#ifdef DO_DEBUG
 #define HAL_UART TRUE
 #define HAL_UART_ISR 2
 #define HAL_UART_DMA 1
+#define INT_HEAP_LEN 2688
 #endif
 
 #include "hal_board_cfg.h"

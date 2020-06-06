@@ -132,19 +132,17 @@ void zclFreePadApp_Init(byte task_id) {
     zclFreePadApp_InitClusters();
 
     zclGeneral_RegisterCmdCallbacks(1, &zclFreePadApp_CmdCallbacks);
-    for (int i = 0; i < zclFreePadApp_SimpleDescsCount; i++) {
-        SimpleDescriptionFormat_t descriptor = zclFreePadApp_SimpleDescs[i];
-        if (i == 0) {
-            zcl_registerAttrList(descriptor.EndPoint, zclFreePadApp_AttrsFirstEPCount, zclFreePadApp_AttrsFirstEP);
-        } else {
-            // take one lower [i-1], since first ep  handled by zclFreePadApp_AttrsFirstEP
-            zcl_registerAttrList(descriptor.EndPoint, FREEPAD_ATTRS_COUNT, zclFreePadApp_Attrs[i - 1]);
-        }
 
-        bdb_RegisterSimpleDescriptor(&zclFreePadApp_SimpleDescs[i]);
-
-        zcl_registerReadWriteCB(descriptor.EndPoint, NULL, zclFreePadApp_ReadWriteAuthCB);
+    zcl_registerAttrList(zclFreePadApp_SimpleDescs[0].EndPoint, zclFreePadApp_AttrsFirstEPCount, zclFreePadApp_AttrsFirstEP);
+    bdb_RegisterSimpleDescriptor(&zclFreePadApp_SimpleDescs[0]);
+    zcl_registerReadWriteCB(zclFreePadApp_SimpleDescs[0].EndPoint, NULL, zclFreePadApp_ReadWriteAuthCB);
+#if FREEPAD_BUTTONS_COUNT > 1
+    for (uint8 i = 0; i < FREEPAD_BUTTONS_COUNT; i++) {
+        zcl_registerAttrList(zclFreePadApp_SimpleDescs[i + 1].EndPoint, FREEPAD_ATTRS_COUNT, zclFreePadApp_Attrs[i]);
+        bdb_RegisterSimpleDescriptor(&zclFreePadApp_SimpleDescs[i + 1]);
+        zcl_registerReadWriteCB(zclFreePadApp_SimpleDescs[i + 1].EndPoint, NULL, zclFreePadApp_ReadWriteAuthCB);
     }
+#endif
     zcl_registerForMsg(zclFreePadApp_TaskID);
 
     // Register for all key events - This app will handle all key events
@@ -155,7 +153,6 @@ void zclFreePadApp_Init(byte task_id) {
 #ifdef FREEPAD_ENABLE_TL
     touchLinkInitiator_RegisterNotifyTLCB(zclFreePadApp_TL_NotifyCb);
 #endif
-
 
     LREP("Started build %s \r\n", zclFreePadApp_DateCodeNT);
     osal_start_reload_timer(zclFreePadApp_TaskID, FREEPADAPP_REPORT_EVT, FREEPADAPP_REPORT_DELAY);

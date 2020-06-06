@@ -69,13 +69,14 @@ extern uint8 zclFreePadApp_SwitchTypes[];
 
 
 extern SimpleDescriptionFormat_t zclFreePadApp_SimpleDescs[];
-extern uint8 zclFreePadApp_SimpleDescsCount;
 extern uint8 zclFreePadApp_BatteryVoltage;
 extern uint8 zclFreePadApp_BatteryPercentageRemainig;
 
 
 // attribute list
+#if FREEPAD_BUTTONS_COUNT > 1
 extern CONST zclAttrRec_t zclFreePadApp_Attrs[][FREEPAD_ATTRS_COUNT];
+#endif
 extern CONST zclAttrRec_t zclFreePadApp_AttrsFirstEP[];
 extern CONST uint8 zclFreePadApp_AttrsFirstEPCount;
 

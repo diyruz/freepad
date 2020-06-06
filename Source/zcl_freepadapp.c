@@ -156,13 +156,6 @@ void zclFreePadApp_Init(byte task_id) {
     touchLinkInitiator_RegisterNotifyTLCB(zclFreePadApp_TL_NotifyCb);
 #endif
 
-    if (zgReadStartupOptions() & ZCD_STARTOPT_DEFAULT_NETWORK_STATE) {
-        LREPMaster("BDB_COMMISSIONING_MODE_NWK_STEERING\r\n");
-        bdb_StartCommissioning(BDB_COMMISSIONING_MODE_NWK_STEERING);
-    } else {
-        LREPMaster("BDB_COMMISSIONING_REJOIN_EXISTING_NETWORK_ON_STARTUP\r\n");
-        bdb_StartCommissioning(BDB_COMMISSIONING_REJOIN_EXISTING_NETWORK_ON_STARTUP);
-    }
 
     LREP("Started build %s \r\n", zclFreePadApp_DateCodeNT);
     osal_start_reload_timer(zclFreePadApp_TaskID, FREEPADAPP_REPORT_EVT, FREEPADAPP_REPORT_DELAY);
@@ -171,6 +164,7 @@ void zclFreePadApp_Init(byte task_id) {
 
     ZMacSetTransmitPower(TX_PWR_PLUS_4); // set 4dBm
     // zclFreePadApp_ReportBattery();
+    bdb_StartCommissioning(BDB_COMMISSIONING_MODE_NWK_STEERING | BDB_COMMISSIONING_MODE_FINDING_BINDING);
 }
 
 static void zclFreePadApp_ResetBackoffRetry(void) {

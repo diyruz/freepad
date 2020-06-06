@@ -20,12 +20,12 @@
 #define ZCL_LEVEL_CTRL
 #define ZCL_REPORTING_DEVICE
 
+// #define FREEPAD_ENABLE_TL
 #ifdef FREEPAD_ENABLE_TL
 #define INTER_PAN
 #define BDB_TL_INITIATOR
 #endif
 
-#define ZSTACK_DEVICE_BUILD (DEVICE_BUILD_ENDDEVICE)
 
 #define DISABLE_GREENPOWER_BASIC_PROXY
 #define BDB_FINDING_BINDING_CAPABILITY_ENABLED 1
@@ -83,16 +83,22 @@
 
 #if defined(HAL_BOARD_FREEPAD_20) || defined(HAL_BOARD_FREEPAD_12) || defined(HAL_BOARD_FREEPAD_8) || defined(HAL_BOARD_FREEPAD_3) ||      \
     defined(HAL_BOARD_FREEPAD_2) || defined(HAL_BOARD_FREEPAD_1)
-#define HAL_UART FALSE
 #define POWER_SAVING
-#elif defined(HAL_BOARD_CHDTECH_DEV)
-#define DO_DEBUG
+#endif
+
+
+#if defined(HAL_BOARD_CHDTECH_DEV)
+// #define DO_DEBUG
 #endif
 
 #ifdef DO_DEBUG
 #define HAL_UART TRUE
 #define HAL_UART_ISR 2
 #define HAL_UART_DMA 1
+#define INT_HEAP_LEN (2688-0x128 - 0xCD)
+#endif
+
+#ifndef INT_HEAP_LEN
 #define INT_HEAP_LEN 2688
 #endif
 

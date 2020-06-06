@@ -83,13 +83,13 @@ CONST zclAttrRec_t zclFreePadApp_AttrsFirstEP[] = {
 CONST zclAttrRec_t zclFreePadApp_Attrs[][FREEPAD_ATTRS_COUNT] = {
 
     {{SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_TYPE, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchTypes[1]}},
-     {SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_ACTIONS, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchActions[1]}}},
+     {SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_ACTIONS, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchActions[1]}}}
 
-#if defined(HAL_BOARD_FREEPAD_20) || defined(HAL_BOARD_FREEPAD_12) || defined(HAL_BOARD_FREEPAD_8) 
-    {{SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_TYPE, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchTypes[2]}},
-     {SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_ACTIONS, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchActions[2]}}}
-
+#if FREEPAD_BUTTONS_COUNT > 2
     ,
+    {{SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_TYPE, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchTypes[2]}},
+     {SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_ACTIONS, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchActions[2]}}},
+
     {{SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_TYPE, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchTypes[3]}},
      {SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_ACTIONS, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchActions[3]}}},
 
@@ -105,9 +105,8 @@ CONST zclAttrRec_t zclFreePadApp_Attrs[][FREEPAD_ATTRS_COUNT] = {
     {{SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_TYPE, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchTypes[7]}},
      {SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_ACTIONS, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchActions[7]}}}
 #endif
-#if defined(HAL_BOARD_FREEPAD_20) || defined(HAL_BOARD_FREEPAD_12)
+#if FREEPAD_BUTTONS_COUNT > 8
     ,
-
     {{SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_TYPE, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchTypes[8]}},
      {SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_ACTIONS, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchActions[8]}}},
 
@@ -120,9 +119,8 @@ CONST zclAttrRec_t zclFreePadApp_Attrs[][FREEPAD_ATTRS_COUNT] = {
     {{SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_TYPE, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchTypes[11]}},
      {SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_ACTIONS, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchActions[11]}}}
 #endif
-#if defined(HAL_BOARD_FREEPAD_20)
+#if FREEPAD_BUTTONS_COUNT > 12
     ,
-
     {{SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_TYPE, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchTypes[12]}},
      {SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_ACTIONS, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchActions[12]}}},
 
@@ -156,10 +154,9 @@ const cId_t zclSampleSw_InClusterList[] = {ZCL_CLUSTER_ID_GEN_BASIC};
 
 #define ZCLSAMPLESW_MAX_INCLUSTERS (sizeof(zclSampleSw_InClusterList) / sizeof(zclSampleSw_InClusterList[0]))
 
-const cId_t zclSampleSw_OutClusterListOdd[] = {ZCL_CLUSTER_ID_GEN_ON_OFF,
-                                               ZCL_CLUSTER_ID_GEN_MULTISTATE_INPUT_BASIC};
-const cId_t zclSampleSw_OutClusterListNth14[] = {ZCL_CLUSTER_ID_GEN_ON_OFF, ZCL_CLUSTER_ID_GEN_LEVEL_CONTROL, ZCL_CLUSTER_ID_LIGHTING_COLOR_CONTROL,
-                                               ZCL_CLUSTER_ID_GEN_MULTISTATE_INPUT_BASIC};
+const cId_t zclSampleSw_OutClusterListOdd[] = {ZCL_CLUSTER_ID_GEN_ON_OFF, ZCL_CLUSTER_ID_GEN_MULTISTATE_INPUT_BASIC};
+const cId_t zclSampleSw_OutClusterListNth14[] = {ZCL_CLUSTER_ID_GEN_ON_OFF, ZCL_CLUSTER_ID_GEN_LEVEL_CONTROL,
+                                                 ZCL_CLUSTER_ID_LIGHTING_COLOR_CONTROL, ZCL_CLUSTER_ID_GEN_MULTISTATE_INPUT_BASIC};
 const cId_t zclSampleSw_OutClusterListEven[] = {ZCL_CLUSTER_ID_GEN_ON_OFF, ZCL_CLUSTER_ID_GEN_MULTISTATE_INPUT_BASIC};
 
 #define ZCLSAMPLESW_MAX_OUTCLUSTERS_NTH14 (sizeof(zclSampleSw_OutClusterListNth14) / sizeof(zclSampleSw_OutClusterListNth14[0]))
@@ -184,11 +181,10 @@ void zclFreePadApp_InitClusters(void) {
             zclFreePadApp_SimpleDescs[i].pAppInClusterList = (cId_t *)NULL;
         }
 
-        if (endPoint % 4 == 1) { //every 1 in 4
+        if (endPoint % 4 == 1) { // every 1 in 4
             zclFreePadApp_SimpleDescs[i].AppNumOutClusters = ZCLSAMPLESW_MAX_OUTCLUSTERS_NTH14;
             zclFreePadApp_SimpleDescs[i].pAppOutClusterList = (cId_t *)zclSampleSw_OutClusterListNth14;
-        }
-        else if (endPoint % 2 == 0) {
+        } else if (endPoint % 2 == 0) {
             zclFreePadApp_SimpleDescs[i].AppNumOutClusters = ZCLSAMPLESW_MAX_OUTCLUSTERS_EVEN;
             zclFreePadApp_SimpleDescs[i].pAppOutClusterList = (cId_t *)zclSampleSw_OutClusterListEven;
         } else {
@@ -201,7 +197,8 @@ uint8 zclFreePadApp_SimpleDescsCount = FREEPAD_BUTTONS_COUNT;
 
 byte zclFreePadApp_KeyCodeToButton(byte key) {
     switch (key) {
-#if defined(HAL_BOARD_FREEPAD_20) || defined(HAL_BOARD_FREEPAD_12) || defined(HAL_BOARD_FREEPAD_8) || defined(HAL_BOARD_FREEPAD_3) || defined(HAL_BOARD_FREEPAD_2) || defined(HAL_BOARD_FREEPAD_1)
+#if defined(HAL_BOARD_FREEPAD_20) || defined(HAL_BOARD_FREEPAD_12) || defined(HAL_BOARD_FREEPAD_8) || defined(HAL_BOARD_FREEPAD_3) ||      \
+    defined(HAL_BOARD_FREEPAD_2) || defined(HAL_BOARD_FREEPAD_1)
     case 0x9: // row=4 col=4
         return 1;
     case 0xa: // row=4 col=8
@@ -218,7 +215,6 @@ byte zclFreePadApp_KeyCodeToButton(byte key) {
         return 7;
     case 0x18: // row=8 col=32
         return 8;
-#if defined(HAL_BOARD_FREEPAD_12) || defined(HAL_BOARD_FREEPAD_20)
     case 0x21: // row=16 col=4
         return 9;
     case 0x22: // row=16 col=8
@@ -227,8 +223,6 @@ byte zclFreePadApp_KeyCodeToButton(byte key) {
         return 11;
     case 0x28: // row=16 col=32
         return 12;
-#endif
-#if defined(HAL_BOARD_FREEPAD_20)
     case 0x41: // row=32 col=4
         return 13;
     case 0x42: // row=32 col=8
@@ -245,7 +239,6 @@ byte zclFreePadApp_KeyCodeToButton(byte key) {
         return 19;
     case 0x88: // row=64 col=32
         return 20;
-#endif
 #elif defined(HAL_BOARD_CHDTECH_DEV)
     case 0x1: // row=4 col=4
         return 1;

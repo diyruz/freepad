@@ -137,10 +137,10 @@ void zclFreePadApp_Init(byte task_id) {
     bdb_RegisterSimpleDescriptor(&zclFreePadApp_SimpleDescs[0]);
     zcl_registerReadWriteCB(zclFreePadApp_SimpleDescs[0].EndPoint, NULL, zclFreePadApp_ReadWriteAuthCB);
 #if FREEPAD_BUTTONS_COUNT > 1
-    for (uint8 i = 0; i < FREEPAD_BUTTONS_COUNT; i++) {
-        zcl_registerAttrList(zclFreePadApp_SimpleDescs[i + 1].EndPoint, FREEPAD_ATTRS_COUNT, zclFreePadApp_Attrs[i]);
-        bdb_RegisterSimpleDescriptor(&zclFreePadApp_SimpleDescs[i + 1]);
-        zcl_registerReadWriteCB(zclFreePadApp_SimpleDescs[i + 1].EndPoint, NULL, zclFreePadApp_ReadWriteAuthCB);
+    for (uint8 i = 1; i < FREEPAD_BUTTONS_COUNT; i++) {
+        zcl_registerAttrList(zclFreePadApp_SimpleDescs[i].EndPoint, FREEPAD_ATTRS_COUNT, zclFreePadApp_Attrs[i]);
+        bdb_RegisterSimpleDescriptor(&zclFreePadApp_SimpleDescs[i]);
+        zcl_registerReadWriteCB(zclFreePadApp_SimpleDescs[i].EndPoint, NULL, zclFreePadApp_ReadWriteAuthCB);
     }
 #endif
     zcl_registerForMsg(zclFreePadApp_TaskID);

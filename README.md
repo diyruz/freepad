@@ -9,7 +9,7 @@
 
 # How to join:
 
-1. Press and hold button (1) for 3-100 seconds(depends whter or not device is on a network), until device start flashing led
+1. Press and hold *any* button for 3-10 seconds(depends whter or not device is on a network), until device start flashing led
 2. Wait, in case of successfull join, device will flash led 5 times
 3. If join failed, device will flash led 3 times
 

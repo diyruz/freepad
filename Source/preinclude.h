@@ -18,7 +18,10 @@
 #define ZCL_IDENTIFY
 #define ZCL_ON_OFF
 #define ZCL_LEVEL_CTRL
+
+//TODO: PM3 refactor z2m converters
 #define ZCL_REPORTING_DEVICE
+#define BDB_REPORTING TRUE
 
 // #define FREEPAD_ENABLE_TL
 #ifdef FREEPAD_ENABLE_TL
@@ -29,7 +32,7 @@
 
 #define DISABLE_GREENPOWER_BASIC_PROXY
 #define BDB_FINDING_BINDING_CAPABILITY_ENABLED 1
-#define BDB_REPORTING TRUE
+
 
 #define ISR_KEYINTERRUPT
 #define HAL_BUZZER FALSE
@@ -83,15 +86,39 @@
 
 
 #if defined(HAL_BOARD_CHDTECH_DEV)
-// #define DO_DEBUG
+#define DO_DEBUG_UART
 #endif
 
-#ifdef DO_DEBUG
+#ifdef DO_DEBUG_UART
 #define HAL_UART TRUE
-#define HAL_UART_ISR 2
 #define HAL_UART_DMA 1
-#define INT_HEAP_LEN (2688-0x128 - 0xCD)
+#define INT_HEAP_LEN (2685 - 0x4B - 0xBB)
 #endif
+
+#ifdef DO_DEBUG_MT
+#define HAL_UART TRUE
+#define HAL_UART_DMA 1
+#define HAL_UART_ISR 2
+#define INT_HEAP_LEN (2688-0xC4-0x15-0x44-0x20-0x1E)
+
+#define MT_TASK
+
+#define MT_UTIL_FUNC
+#define MT_UART_DEFAULT_BAUDRATE HAL_UART_BR_115200
+#define MT_UART_DEFAULT_OVERFLOW FALSE
+
+#define ZTOOL_P1
+
+#define MT_APP_FUNC
+#define MT_APP_CNF_FUNC
+#define MT_SYS_FUNC
+#define MT_ZDO_FUNC
+#define MT_ZDO_MGMT
+#define MT_DEBUG_FUNC
+
+#endif
+
+
 
 #ifndef INT_HEAP_LEN
 #define INT_HEAP_LEN 2688

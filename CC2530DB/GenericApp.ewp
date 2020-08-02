@@ -469,6 +469,7 @@
                     <name>CCIncludePath2</name>
                     <state>$PROJ_DIR$</state>
                     <state>$PROJ_DIR$\..\Source</state>
+                    <state>$PROJ_DIR$\..\zstack-lib</state>
                     <state>$PROJ_DIR$\..\..\Source</state>
                     <state>$PROJ_DIR$\..\..\..\ZMain\TI2530DB</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\Components\hal\include</state>
@@ -1608,6 +1609,7 @@
                     <name>CCIncludePath2</name>
                     <state>$PROJ_DIR$</state>
                     <state>$PROJ_DIR$\..\Source</state>
+                    <state>$PROJ_DIR$\..\zstack-lib</state>
                     <state>$PROJ_DIR$\..\..\Source</state>
                     <state>$PROJ_DIR$\..\..\..\ZMain\TI2530DB</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\Components\hal\include</state>
@@ -2747,6 +2749,7 @@
                     <name>CCIncludePath2</name>
                     <state>$PROJ_DIR$</state>
                     <state>$PROJ_DIR$\..\Source</state>
+                    <state>$PROJ_DIR$\..\zstack-lib</state>
                     <state>$PROJ_DIR$\..\..\Source</state>
                     <state>$PROJ_DIR$\..\..\..\ZMain\TI2530DB</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\Components\hal\include</state>
@@ -3886,6 +3889,7 @@
                     <name>CCIncludePath2</name>
                     <state>$PROJ_DIR$</state>
                     <state>$PROJ_DIR$\..\Source</state>
+                    <state>$PROJ_DIR$\..\zstack-lib</state>
                     <state>$PROJ_DIR$\..\..\Source</state>
                     <state>$PROJ_DIR$\..\..\..\ZMain\TI2530DB</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\Components\hal\include</state>
@@ -5025,6 +5029,7 @@
                     <name>CCIncludePath2</name>
                     <state>$PROJ_DIR$</state>
                     <state>$PROJ_DIR$\..\Source</state>
+                    <state>$PROJ_DIR$\..\zstack-lib</state>
                     <state>$PROJ_DIR$\..\..\Source</state>
                     <state>$PROJ_DIR$\..\..\..\ZMain\TI2530DB</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\Components\hal\include</state>
@@ -6164,6 +6169,7 @@
                     <name>CCIncludePath2</name>
                     <state>$PROJ_DIR$</state>
                     <state>$PROJ_DIR$\..\Source</state>
+                    <state>$PROJ_DIR$\..\zstack-lib</state>
                     <state>$PROJ_DIR$\..\..\Source</state>
                     <state>$PROJ_DIR$\..\..\..\ZMain\TI2530DB</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\Components\hal\include</state>
@@ -7303,6 +7309,7 @@
                     <name>CCIncludePath2</name>
                     <state>$PROJ_DIR$</state>
                     <state>$PROJ_DIR$\..\Source</state>
+                    <state>$PROJ_DIR$\..\zstack-lib</state>
                     <state>$PROJ_DIR$\..\..\Source</state>
                     <state>$PROJ_DIR$\..\..\..\ZMain\TI2530DB</state>
                     <state>$PROJ_DIR$\..\..\..\..\..\Components\hal\include</state>
@@ -7977,22 +7984,7 @@
     <group>
         <name>App</name>
         <file>
-            <name>$PROJ_DIR$\..\Source\battery.h</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Source\bettery.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Source\Debug.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Source\Debug.h</name>
-        </file>
-        <file>
             <name>$PROJ_DIR$\..\Source\hal_key.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\Source\hal_key.h</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\Source\OSAL_FreePadApp.c</name>
@@ -8560,6 +8552,42 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\..\..\ZMain\TI2530DB\ZMain.c</name>
+        </file>
+    </group>
+    <group>
+        <name>zstack-lib</name>
+        <file>
+            <name>$PROJ_DIR$\..\zstack-lib\battery.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\zstack-lib\bettery.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\zstack-lib\commissioning.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\zstack-lib\commissioning.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\zstack-lib\Debug.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\zstack-lib\Debug.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\zstack-lib\factory_reset.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\zstack-lib\factory_reset.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\zstack-lib\hal_key.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\zstack-lib\utils.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\zstack-lib\utils.h</name>
         </file>
     </group>
 </project>

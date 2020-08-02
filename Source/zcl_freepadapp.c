@@ -23,7 +23,8 @@
 #endif
 
 #include "Debug.h"
-
+#include "commissioning.h"
+#include "factory_reset.h"
 #include "onboard.h"
 
 /* HAL */
@@ -64,8 +65,7 @@ bool holdSend = false;
 byte currentKeyCode = 0;
 byte clicksCount = 0;
 
-byte rejoinsLeft = FREEPADAPP_END_DEVICE_REJOIN_TRIES;
-uint32 rejoinDelay = FREEPADAPP_END_DEVICE_REJOIN_START_DELAY;
+
 
 afAddrType_t inderect_DstAddr = {.addrMode = (afAddrMode_t)AddrNotPresent, .endPoint = 0, .addr.shortAddr = 0};
 
@@ -73,14 +73,9 @@ afAddrType_t inderect_DstAddr = {.addrMode = (afAddrMode_t)AddrNotPresent, .endP
  * LOCAL FUNCTIONS
  */
 static void zclFreePadApp_HandleKeys(byte shift, byte keys);
-static void zclFreePadApp_BindNotification(bdbBindNotificationData_t *data);
 static void zclFreePadApp_ReportBattery(void);
-static void zclFreePadApp_Rejoin(void);
 static void zclFreePadApp_SendButtonPress(uint8 endPoint, byte clicksCount);
-static void zclFreePadApp_ProcessCommissioningStatus(bdbCommissioningModeMsg_t *bdbCommissioningModeMsg);
 static void zclFreePadApp_SendKeys(byte keyCode, byte pressCount, byte pressTime);
-static void zclFreePadApp_ResetBackoffRetry(void);
-static void zclFreePadApp_OnConnect(void);
 static void zclFreePadApp_BasicResetCB(void);
 static ZStatus_t zclFreePadApp_ReadWriteAuthCB(afAddrType_t *srcAddr, zclAttrRec_t *pAttr, uint8 oper);
 static void zclFreePadApp_SaveAttributesToNV(void);
@@ -121,7 +116,6 @@ static ZStatus_t zclFreePadApp_ReadWriteAuthCB(afAddrType_t *srcAddr, zclAttrRec
     return ZSuccess;
 }
 void zclFreePadApp_Init(byte task_id) {
-    DebugInit();
     // this is important to allow connects throught routers
     // to make this work, coordinator should be compiled with this flag #define TP2_LEGACY_ZC
     requestNewTrustCenterLinkKey = FALSE;
@@ -148,87 +142,15 @@ void zclFreePadApp_Init(byte task_id) {
     // Register for all key events - This app will handle all key events
     RegisterForKeys(zclFreePadApp_TaskID);
 
-    bdb_RegisterBindNotificationCB(zclFreePadApp_BindNotification);
-    bdb_RegisterCommissioningStatusCB(zclFreePadApp_ProcessCommissioningStatus);
 #ifdef FREEPAD_ENABLE_TL
     touchLinkInitiator_RegisterNotifyTLCB(zclFreePadApp_TL_NotifyCb);
 #endif
 
     LREP("Started build %s \r\n", zclFreePadApp_DateCodeNT);
-    osal_start_reload_timer(zclFreePadApp_TaskID, FREEPADAPP_REPORT_EVT, FREEPADAPP_REPORT_DELAY);
-    // this allows power saving, PM2
-    osal_pwrmgr_task_state(zclFreePadApp_TaskID, PWRMGR_CONSERVE);
-
     ZMacSetTransmitPower(TX_PWR_PLUS_4); // set 4dBm
-    // zclFreePadApp_ReportBattery();
-    bdb_StartCommissioning(BDB_COMMISSIONING_MODE_NWK_STEERING | BDB_COMMISSIONING_MODE_FINDING_BINDING);
 }
 
-static void zclFreePadApp_ResetBackoffRetry(void) {
-    rejoinsLeft = FREEPADAPP_END_DEVICE_REJOIN_TRIES;
-    rejoinDelay = FREEPADAPP_END_DEVICE_REJOIN_START_DELAY;
-}
 
-static void zclFreePadApp_OnConnect(void) { zclFreePadApp_ResetBackoffRetry(); }
-
-static void zclFreePadApp_ProcessCommissioningStatus(bdbCommissioningModeMsg_t *bdbCommissioningModeMsg) {
-    LREP("bdbCommissioningMode=%d bdbCommissioningStatus=%d bdbRemainingCommissioningModes=0x%X\r\n",
-         bdbCommissioningModeMsg->bdbCommissioningMode, bdbCommissioningModeMsg->bdbCommissioningStatus,
-         bdbCommissioningModeMsg->bdbRemainingCommissioningModes);
-    switch (bdbCommissioningModeMsg->bdbCommissioningMode) {
-    case BDB_COMMISSIONING_INITIALIZATION:
-        switch (bdbCommissioningModeMsg->bdbCommissioningStatus) {
-        case BDB_COMMISSIONING_NO_NETWORK:
-            LREPMaster("No network\r\n");
-            HalLedBlink(HAL_LED_1, 3, 50, 500);
-            break;
-        case BDB_COMMISSIONING_NETWORK_RESTORED:
-            zclFreePadApp_OnConnect();
-            break;
-        default:
-            break;
-        }
-        break;
-    case BDB_COMMISSIONING_NWK_STEERING:
-        switch (bdbCommissioningModeMsg->bdbCommissioningStatus) {
-        case BDB_COMMISSIONING_SUCCESS:
-            HalLedBlink(HAL_LED_1, 5, 50, 500);
-            LREPMaster("BDB_COMMISSIONING_SUCCESS\r\n");
-            zclFreePadApp_OnConnect();
-            break;
-
-        default:
-            HalLedSet(HAL_LED_1, HAL_LED_MODE_BLINK);
-            break;
-        }
-
-        break;
-
-    case BDB_COMMISSIONING_PARENT_LOST:
-        LREPMaster("BDB_COMMISSIONING_PARENT_LOST\r\n");
-        switch (bdbCommissioningModeMsg->bdbCommissioningStatus) {
-        case BDB_COMMISSIONING_NETWORK_RESTORED:
-            zclFreePadApp_ResetBackoffRetry();
-            break;
-
-        default:
-            HalLedSet(HAL_LED_1, HAL_LED_MODE_FLASH);
-            // // Parent not found, attempt to rejoin again after a exponential backoff delay
-            LREP("rejoinsLeft %d rejoinDelay=%ld\r\n", rejoinsLeft, rejoinDelay);
-            if (rejoinsLeft > 0) {
-                rejoinDelay *= FREEPADAPP_END_DEVICE_REJOIN_BACKOFF;
-                rejoinsLeft -= 1;
-            } else {
-                rejoinDelay = FREEPADAPP_END_DEVICE_REJOIN_MAX_DELAY;
-            }
-            osal_start_timerEx(zclFreePadApp_TaskID, FREEPADAPP_END_DEVICE_REJOIN_EVT, rejoinDelay);
-            break;
-        }
-        break;
-    default:
-        break;
-    }
-}
 
 #define HOLD_CODE 0
 #define RELEASE_CODE 255
@@ -316,7 +238,6 @@ uint16 zclFreePadApp_event_loop(uint8 task_id, uint16 events) {
     afIncomingMSGPacket_t *MSGpkt;
 
     (void)task_id; // Intentionally unreferenced parameter
-    devStates_t zclFreePadApp_NwkState;
     if (events & SYS_EVENT_MSG) {
         while ((MSGpkt = (afIncomingMSGPacket_t *)osal_msg_receive(zclFreePadApp_TaskID))) {
 
@@ -325,22 +246,8 @@ uint16 zclFreePadApp_event_loop(uint8 task_id, uint16 events) {
             case KEY_CHANGE:
                 zclFreePadApp_HandleKeys(((keyChange_t *)MSGpkt)->state, ((keyChange_t *)MSGpkt)->keys);
                 break;
-            case ZDO_STATE_CHANGE:
-                HalLedSet(HAL_LED_1, HAL_LED_MODE_BLINK);
-                zclFreePadApp_NwkState = (devStates_t)(MSGpkt->hdr.status);
-                LREP("zclFreePadApp_NwkState=%d\r\n", zclFreePadApp_NwkState);
-                if (zclFreePadApp_NwkState == DEV_END_DEVICE) {
-                    HalLedSet(HAL_LED_1, HAL_LED_MODE_OFF);
-                }
-                break;
-
-            case AF_DATA_CONFIRM_CMD:
-                // This message is received as a confirmation of a data packet sent.
-                break;
 
             default:
-                LREP("SysEvent 0x%X status 0x%X macSrcAddr 0x%X endPoint=0x%X\r\n", MSGpkt->hdr.event, MSGpkt->hdr.status,
-                     MSGpkt->macSrcAddr, MSGpkt->endPoint);
                 break;
             }
 
@@ -351,12 +258,6 @@ uint16 zclFreePadApp_event_loop(uint8 task_id, uint16 events) {
         // return unprocessed events
         return (events ^ SYS_EVENT_MSG);
     }
-    LREP("events 0x%X\r\n", events);
-    if (events & FREEPADAPP_END_DEVICE_REJOIN_EVT) {
-        LREPMaster("FREEPADAPP_END_DEVICE_REJOIN_EVT\r\n");
-        bdb_ZedAttemptRecoverNwk();
-        return (events ^ FREEPADAPP_END_DEVICE_REJOIN_EVT);
-    }
 
     if (events & FREEPADAPP_SEND_KEYS_EVT) {
         LREPMaster("FREEPADAPP_SEND_KEYS_EVT\r\n");
@@ -365,11 +266,6 @@ uint16 zclFreePadApp_event_loop(uint8 task_id, uint16 events) {
         currentKeyCode = 0;
         holdSend = false;
         return (events ^ FREEPADAPP_SEND_KEYS_EVT);
-    }
-    if (events & FREEPADAPP_RESET_EVT) {
-        LREPMaster("FREEPADAPP_RESET_EVT\r\n");
-        zclFreePadApp_Rejoin();
-        return (events ^ FREEPADAPP_RESET_EVT);
     }
 
     if (events & FREEPADAPP_REPORT_EVT) {
@@ -405,11 +301,6 @@ uint16 zclFreePadApp_event_loop(uint8 task_id, uint16 events) {
     return 0;
 }
 
-static void zclFreePadApp_Rejoin(void) {
-    LREPMaster("Recieved rejoin command\r\n");
-    HalLedSet(HAL_LED_1, HAL_LED_MODE_FLASH);
-    bdb_resetLocalAction();
-}
 
 static void zclFreePadApp_SendButtonPress(uint8 endPoint, uint8 clicksCount) {
 
@@ -439,7 +330,8 @@ static void zclFreePadApp_HandleKeys(byte shift, byte keyCode) {
     prevKeyCode = keyCode;
 
     if (keyCode == HAL_KEY_CODE_RELEASE_KEY) {
-        osal_stop_timerEx(zclFreePadApp_TaskID, FREEPADAPP_RESET_EVT);
+        zclFactoryResetter_HandleKeys(0x40, keyCode);
+        osal_start_timerEx(zclFreePadApp_TaskID, FREEPADAPP_REPORT_EVT, 20 * 1000);
 #ifdef FREEPAD_ENABLE_TL
         osal_stop_timerEx(zclFreePadApp_TaskID, FREEPADAPP_TL_START_EVT);
 #endif
@@ -464,32 +356,14 @@ static void zclFreePadApp_HandleKeys(byte shift, byte keyCode) {
 
     } else {
         byte button = zclFreePadApp_KeyCodeToButton(keyCode);
-        uint32 resetHoldTime = FREEPADAPP_RESET_DELAY;
-        uint32 TLHoldTime = FREEPADAPP_TL_START_DELAY;
-        if (devState == DEV_NWK_ORPHAN) {
-            LREP("devState=%d try to restore network\r\n", devState);
-            bdb_ZedAttemptRecoverNwk();
-        }
-        if (!bdbAttributes.bdbNodeIsOnANetwork) {
-            resetHoldTime = resetHoldTime >> 2;
-            TLHoldTime = TLHoldTime >> 2;
-        }
+        zclCommissioning_HandleKeys(HAL_KEY_PRESS, keyCode);
+        zclFactoryResetter_HandleKeys(HAL_KEY_PRESS, keyCode);
 
-        LREP("resetHoldTime %ld TLHoldTime=%ld\r\n", resetHoldTime, TLHoldTime);
-        switch (button) {
-        case 1:
-            osal_start_timerEx(zclFreePadApp_TaskID, FREEPADAPP_RESET_EVT, resetHoldTime);
-            break;
 #ifdef FREEPAD_ENABLE_TL
-        case 2:
+        if (button == 2) {
             osal_start_timerEx(zclFreePadApp_TaskID, FREEPADAPP_TL_START_EVT, TLHoldTime);
-            break;
-#endif
-
-        default:
-            break;
         }
-
+#endif
         uint8 switchType = zclFreePadApp_SwitchTypes[button - 1];
 
         HalLedSet(HAL_LED_1, HAL_LED_MODE_BLINK);
@@ -516,21 +390,11 @@ static void zclFreePadApp_HandleKeys(byte shift, byte keyCode) {
     }
 }
 
-static void zclFreePadApp_BindNotification(bdbBindNotificationData_t *data) {
-    HalLedSet(HAL_LED_1, HAL_LED_MODE_BLINK);
-    LREP("Recieved bind request clusterId=%d \r\n", data->clusterId);
-    uint16 maxEntries = 0, usedEntries = 0;
-    bindCapacity(&maxEntries, &usedEntries);
-    LREP("bindCapacity %d usedEntries %d \r\n", maxEntries, usedEntries);
-
-    if (data->clusterId == ZCL_CLUSTER_ID_GEN_POWER_CFG) {
-        osal_start_timerEx(zclFreePadApp_TaskID, FREEPADAPP_REPORT_EVT, 1000);
-    }
-}
-
 static void zclFreePadApp_ReportBattery(void) {
-    zclFreePadApp_BatteryVoltage = getBatteryVoltageZCL();
-    zclFreePadApp_BatteryPercentageRemainig = getBatteryRemainingPercentageZCL();
+    uint16 millivolts = getBatteryVoltage();
+    zclFreePadApp_BatteryVoltage = getBatteryVoltageZCL(millivolts);
+    zclFreePadApp_BatteryPercentageRemainig = getBatteryRemainingPercentageZCLCR2032(millivolts);
+
     LREP("Battery voltageZCL=%d prc=%d voltage=%d\r\n", zclFreePadApp_BatteryVoltage, zclFreePadApp_BatteryPercentageRemainig,
          getBatteryVoltage());
     bdb_RepChangedAttrValue(1, ZCL_CLUSTER_ID_GEN_POWER_CFG, ATTRID_POWER_CFG_BATTERY_PERCENTAGE_REMAINING);

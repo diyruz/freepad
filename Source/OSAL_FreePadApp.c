@@ -15,6 +15,9 @@
 #endif
 
 #include "zcl_freepadapp.h"
+#include "commissioning.h"
+#include "factory_reset.h"
+#include "Debug.h"
 
 const pTaskEventHandlerFn tasksArr[] = {macEventLoop,
                                         nwk_event_loop,
@@ -27,13 +30,17 @@ const pTaskEventHandlerFn tasksArr[] = {macEventLoop,
                                         touchLinkInitiator_event_loop,
                                         #endif
                                         bdb_event_loop,
-                                        zclFreePadApp_event_loop};
+                                        zclFreePadApp_event_loop,
+                                        zclCommissioning_event_loop,
+                                        zclFactoryResetter_loop
+                                        };
 
 const uint8 tasksCnt = sizeof(tasksArr) / sizeof(tasksArr[0]);
 uint16 *tasksEvents;
 
 void osalInitTasks(void) {
     uint8 taskID = 0;
+    DebugInit();
 
     tasksEvents = (uint16 *)osal_mem_alloc(sizeof(uint16) * tasksCnt);
     osal_memset(tasksEvents, 0, (sizeof(uint16) * tasksCnt));
@@ -48,7 +55,9 @@ void osalInitTasks(void) {
     touchLinkInitiator_Init(taskID++);
     #endif
     bdb_Init(taskID++);
-    zclFreePadApp_Init(taskID);
+    zclFreePadApp_Init(taskID++);
+    zclCommissioning_Init(taskID++);
+    zclFactoryResetter_Init(taskID++);
 }
 
 /*********************************************************************

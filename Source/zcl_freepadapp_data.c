@@ -15,7 +15,12 @@
  * CONSTANTS
  */
 
+#if (!defined PM3)
 #define FREEPADAPP_DEVICE_VERSION 2
+#elif (defined PM3)
+#define FREEPADAPP_DEVICE_VERSION 3
+#endif
+
 #define FREEPADAPP_FLAGS 0
 
 #define FREEPADAPP_HWVERSION 1

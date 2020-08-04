@@ -21,7 +21,6 @@
 
 //TODO: PM3 refactor z2m converters
 #define ZCL_REPORTING_DEVICE
-#define BDB_REPORTING TRUE
 
 // #define FREEPAD_ENABLE_TL
 #ifdef FREEPAD_ENABLE_TL
@@ -82,8 +81,12 @@
 #if defined(HAL_BOARD_FREEPAD_20) || defined(HAL_BOARD_FREEPAD_12) || defined(HAL_BOARD_FREEPAD_8) || defined(HAL_BOARD_FREEPAD_3) ||      \
     defined(HAL_BOARD_FREEPAD_2) || defined(HAL_BOARD_FREEPAD_1)
 #define POWER_SAVING
+//#define PM3
 #endif
 
+#if (!defined PM3)
+#define BDB_REPORTING TRUE
+#endif
 
 #if defined(HAL_BOARD_CHDTECH_DEV)
 #define DO_DEBUG_UART

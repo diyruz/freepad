@@ -421,6 +421,7 @@ static void zclFreePadApp_ReportBattery(void) {
     zcl_SendReportCmd(1, &inderect_DstAddr, ZCL_CLUSTER_ID_GEN_POWER_CFG, pReportCmd, ZCL_FRAME_CLIENT_SERVER_DIR, TRUE, bdb_getZCLFrameCounter());
   }
   osal_mem_free(pReportCmd);
+#endif
 }
 
 static void zclFreePadApp_RestoreAttributesFromNV(void) {

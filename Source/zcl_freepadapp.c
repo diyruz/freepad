@@ -39,6 +39,9 @@
  */
 #define HAL_KEY_CODE_RELEASE_KEY HAL_KEY_CODE_NOKEY
 
+#define HOLD_CODE 0
+#define RELEASE_CODE 255
+
 /*********************************************************************
  * CONSTANTS
  */
@@ -65,8 +68,6 @@ bool holdSend = false;
 byte currentKeyCode = 0;
 byte clicksCount = 0;
 
-
-
 afAddrType_t inderect_DstAddr = {.addrMode = (afAddrMode_t)AddrNotPresent, .endPoint = 0, .addr.shortAddr = 0};
 
 /*********************************************************************
@@ -76,6 +77,7 @@ static void zclFreePadApp_HandleKeys(byte shift, byte keys);
 static void zclFreePadApp_ReportBattery(void);
 static void zclFreePadApp_SendButtonPress(uint8 endPoint, byte clicksCount);
 static void zclFreePadApp_SendKeys(byte keyCode, byte pressCount, byte pressTime);
+static void zclFreepadApp_SendKeysToBinds(byte keyCode, byte pressCount, byte pressTime);
 static void zclFreePadApp_BasicResetCB(void);
 static ZStatus_t zclFreePadApp_ReadWriteAuthCB(afAddrType_t *srcAddr, zclAttrRec_t *pAttr, uint8 oper);
 static void zclFreePadApp_SaveAttributesToNV(void);
@@ -132,7 +134,7 @@ void zclFreePadApp_Init(byte task_id) {
     zcl_registerReadWriteCB(zclFreePadApp_SimpleDescs[0].EndPoint, NULL, zclFreePadApp_ReadWriteAuthCB);
 
     for (uint8 i = 1; i < FREEPAD_BUTTONS_COUNT; i++) {
-        zcl_registerAttrList(zclFreePadApp_SimpleDescs[i].EndPoint, FREEPAD_ATTRS_COUNT, zclFreePadApp_Attrs[i-1]);
+        zcl_registerAttrList(zclFreePadApp_SimpleDescs[i].EndPoint, FREEPAD_ATTRS_COUNT, zclFreePadApp_Attrs[i - 1]);
         bdb_RegisterSimpleDescriptor(&zclFreePadApp_SimpleDescs[i]);
         zcl_registerReadWriteCB(zclFreePadApp_SimpleDescs[i].EndPoint, NULL, zclFreePadApp_ReadWriteAuthCB);
     }
@@ -149,83 +151,72 @@ void zclFreePadApp_Init(byte task_id) {
     ZMacSetTransmitPower(TX_PWR_PLUS_4); // set 4dBm
 }
 
-
-
-#define HOLD_CODE 0
-#define RELEASE_CODE 255
-static void zclFreePadApp_SendKeys(byte keyCode, byte pressCount, bool isRelease) {
+static void zclFreepadApp_SendKeysToBinds(byte keyCode, byte pressCount, bool isRelease) {
     byte button = zclFreePadApp_KeyCodeToButton(keyCode);
     uint8 endPoint = zclFreePadApp_SimpleDescs[button - 1].EndPoint;
     uint8 switchAction = zclFreePadApp_SwitchActions[button - 1];
     LREP("button %d clicks %d isRelease %d action %d\r\n", button, pressCount, isRelease, switchAction);
 
-    switch (pressCount) {
-    case 1:
-
-        switch (switchAction) {
-        case ON_OFF_SWITCH_ACTIONS_OFF:
-            zclGeneral_SendOnOff_CmdOff(endPoint, &inderect_DstAddr, TRUE, bdb_getZCLFrameCounter());
-            break;
-        case ON_OFF_SWITCH_ACTIONS_ON:
-            zclGeneral_SendOnOff_CmdOn(endPoint, &inderect_DstAddr, TRUE, bdb_getZCLFrameCounter());
-            break;
-        case ON_OFF_SWITCH_ACTIONS_TOGGLE:
-        default:
-            zclGeneral_SendOnOff_CmdToggle(endPoint, &inderect_DstAddr, TRUE, bdb_getZCLFrameCounter());
-            break;
-        }
-
-        if (button % 2 == 0) {
-            // even numbers (2 4, send up to lower odd number)
-            zclGeneral_SendLevelControlStepWithOnOff(endPoint - 1, &inderect_DstAddr, LEVEL_STEP_UP, FREEPADAPP_LEVEL_STEP_SIZE,
-                                                     FREEPADAPP_LEVEL_TRANSITION_TIME, TRUE, bdb_getZCLFrameCounter());
-
-            zclLighting_ColorControl_Send_StepColorCmd(endPoint - 1, &inderect_DstAddr, 1000, 0, 0, true, bdb_getZCLFrameCounter());
-            // works zclLighting_ColorControl_Send_MoveToColorCmd( endPoint - 1, &inderect_DstAddr, 45914, 19615, 0, TRUE,
-            // bdb_getZCLFrameCounter());
-
-            // zclLighting_ColorControl_Send_StepColorCmd( endPoint - 1, &inderect_DstAddr, 1000, 1000, 0, TRUE, bdb_getZCLFrameCounter());
-            // zclLighting_ColorControl_Send_StepHueCmd(endPoint - 1, &inderect_DstAddr, LIGHTING_STEP_HUE_UP, 100, 0, TRUE,
-            // bdb_getZCLFrameCounter());
-
-        } else {
-            // odd number (1 3, send LEVEL_MOVE_DOWN to self)
-            zclGeneral_SendLevelControlStepWithOnOff(endPoint, &inderect_DstAddr, LEVEL_STEP_DOWN, FREEPADAPP_LEVEL_STEP_SIZE,
-                                                     FREEPADAPP_LEVEL_TRANSITION_TIME, TRUE, bdb_getZCLFrameCounter());
-
-            zclLighting_ColorControl_Send_StepColorCmd(endPoint - 1, &inderect_DstAddr, -1000, 0, 0, true, bdb_getZCLFrameCounter());
-            // zclLighting_ColorControl_Send_StepSaturationCmd(endPoint, &inderect_DstAddr, LIGHTING_STEP_SATURATION_UP, 100, 0, TRUE,
-            // bdb_getZCLFrameCounter());
-            // works zclLighting_ColorControl_Send_MoveToColorCmd( endPoint, &inderect_DstAddr, 11298, 48942, 0, TRUE,
-            // bdb_getZCLFrameCounter());
-        }
-
-        if (button % 4 == 1) {
-            zclLighting_ColorControl_Send_StepColorCmd(endPoint, &inderect_DstAddr, FREEPADAPP_COLOR_LEVEL_STEP_X_SIZE,
-                                                       FREEPADAPP_COLOR_LEVEL_STEP_Y_SIZE, FREEPADAPP_COLOR_LEVEL_TRANSITION_TIME, true,
-                                                       bdb_getZCLFrameCounter());
-        } else if (button % 4 == 2) {
-            zclLighting_ColorControl_Send_StepColorCmd(endPoint - 1, &inderect_DstAddr, -FREEPADAPP_COLOR_LEVEL_STEP_X_SIZE,
-                                                       FREEPADAPP_COLOR_LEVEL_STEP_Y_SIZE, FREEPADAPP_COLOR_LEVEL_TRANSITION_TIME, true,
-                                                       bdb_getZCLFrameCounter());
-        } else if (button % 4 == 3) {
-            zclLighting_ColorControl_Send_StepColorCmd(endPoint - 2, &inderect_DstAddr, FREEPADAPP_COLOR_LEVEL_STEP_X_SIZE,
-                                                       FREEPADAPP_COLOR_LEVEL_STEP_Y_SIZE, FREEPADAPP_COLOR_LEVEL_TRANSITION_TIME, true,
-                                                       bdb_getZCLFrameCounter());
-        } else if (button % 4 == 0) {
-            zclLighting_ColorControl_Send_StepColorCmd(endPoint - 3, &inderect_DstAddr, -FREEPADAPP_COLOR_LEVEL_STEP_X_SIZE,
-                                                       FREEPADAPP_COLOR_LEVEL_STEP_Y_SIZE, FREEPADAPP_COLOR_LEVEL_TRANSITION_TIME, true,
-                                                       bdb_getZCLFrameCounter());
-        }
-
+    switch (switchAction) {
+    case ON_OFF_SWITCH_ACTIONS_OFF:
+        zclGeneral_SendOnOff_CmdOff(endPoint, &inderect_DstAddr, TRUE, bdb_getZCLFrameCounter());
         break;
-    case 2:
+    case ON_OFF_SWITCH_ACTIONS_ON:
+        zclGeneral_SendOnOff_CmdOn(endPoint, &inderect_DstAddr, TRUE, bdb_getZCLFrameCounter());
         break;
-
+    case ON_OFF_SWITCH_ACTIONS_TOGGLE:
     default:
+        zclGeneral_SendOnOff_CmdToggle(endPoint, &inderect_DstAddr, TRUE, bdb_getZCLFrameCounter());
         break;
     }
 
+    if (button % 2 == 0) {
+        // even numbers (2 4, send up to lower odd number)
+        zclGeneral_SendLevelControlStepWithOnOff(endPoint - 1, &inderect_DstAddr, LEVEL_STEP_UP, FREEPADAPP_LEVEL_STEP_SIZE,
+                                                 FREEPADAPP_LEVEL_TRANSITION_TIME, TRUE, bdb_getZCLFrameCounter());
+
+        zclLighting_ColorControl_Send_StepColorCmd(endPoint - 1, &inderect_DstAddr, 1000, 0, 0, true, bdb_getZCLFrameCounter());
+        // works zclLighting_ColorControl_Send_MoveToColorCmd( endPoint - 1, &inderect_DstAddr, 45914, 19615, 0, TRUE,
+        // bdb_getZCLFrameCounter());
+
+        // zclLighting_ColorControl_Send_StepColorCmd( endPoint - 1, &inderect_DstAddr, 1000, 1000, 0, TRUE, bdb_getZCLFrameCounter());
+        // zclLighting_ColorControl_Send_StepHueCmd(endPoint - 1, &inderect_DstAddr, LIGHTING_STEP_HUE_UP, 100, 0, TRUE,
+        // bdb_getZCLFrameCounter());
+
+    } else {
+        // odd number (1 3, send LEVEL_MOVE_DOWN to self)
+        zclGeneral_SendLevelControlStepWithOnOff(endPoint, &inderect_DstAddr, LEVEL_STEP_DOWN, FREEPADAPP_LEVEL_STEP_SIZE,
+                                                 FREEPADAPP_LEVEL_TRANSITION_TIME, TRUE, bdb_getZCLFrameCounter());
+
+        zclLighting_ColorControl_Send_StepColorCmd(endPoint - 1, &inderect_DstAddr, -1000, 0, 0, true, bdb_getZCLFrameCounter());
+        // zclLighting_ColorControl_Send_StepSaturationCmd(endPoint, &inderect_DstAddr, LIGHTING_STEP_SATURATION_UP, 100, 0, TRUE,
+        // bdb_getZCLFrameCounter());
+        // works zclLighting_ColorControl_Send_MoveToColorCmd( endPoint, &inderect_DstAddr, 11298, 48942, 0, TRUE,
+        // bdb_getZCLFrameCounter());
+    }
+
+    if (button % 4 == 1) {
+        zclLighting_ColorControl_Send_StepColorCmd(endPoint, &inderect_DstAddr, FREEPADAPP_COLOR_LEVEL_STEP_X_SIZE,
+                                                   FREEPADAPP_COLOR_LEVEL_STEP_Y_SIZE, FREEPADAPP_COLOR_LEVEL_TRANSITION_TIME, true,
+                                                   bdb_getZCLFrameCounter());
+    } else if (button % 4 == 2) {
+        zclLighting_ColorControl_Send_StepColorCmd(endPoint - 1, &inderect_DstAddr, -FREEPADAPP_COLOR_LEVEL_STEP_X_SIZE,
+                                                   FREEPADAPP_COLOR_LEVEL_STEP_Y_SIZE, FREEPADAPP_COLOR_LEVEL_TRANSITION_TIME, true,
+                                                   bdb_getZCLFrameCounter());
+    } else if (button % 4 == 3) {
+        zclLighting_ColorControl_Send_StepColorCmd(endPoint - 2, &inderect_DstAddr, FREEPADAPP_COLOR_LEVEL_STEP_X_SIZE,
+                                                   FREEPADAPP_COLOR_LEVEL_STEP_Y_SIZE, FREEPADAPP_COLOR_LEVEL_TRANSITION_TIME, true,
+                                                   bdb_getZCLFrameCounter());
+    } else if (button % 4 == 0) {
+        zclLighting_ColorControl_Send_StepColorCmd(endPoint - 3, &inderect_DstAddr, -FREEPADAPP_COLOR_LEVEL_STEP_X_SIZE,
+                                                   FREEPADAPP_COLOR_LEVEL_STEP_Y_SIZE, FREEPADAPP_COLOR_LEVEL_TRANSITION_TIME, true,
+                                                   bdb_getZCLFrameCounter());
+    }
+}
+
+static void zclFreePadApp_SendKeys(byte keyCode, byte pressCount, bool isRelease) {
+    byte button = zclFreePadApp_KeyCodeToButton(keyCode);
+    uint8 endPoint = zclFreePadApp_SimpleDescs[button - 1].EndPoint;
     if (isRelease) {
         zclFreePadApp_SendButtonPress(endPoint, RELEASE_CODE);
     } else {
@@ -300,7 +291,6 @@ uint16 zclFreePadApp_event_loop(uint8 task_id, uint16 events) {
     return 0;
 }
 
-
 static void zclFreePadApp_SendButtonPress(uint8 endPoint, uint8 clicksCount) {
 
     const uint8 NUM_ATTRIBUTES = 1;
@@ -369,7 +359,7 @@ static void zclFreePadApp_HandleKeys(byte shift, byte keyCode) {
         pressTime = osal_getClock();
 
         currentKeyCode = keyCode;
-
+        zclFreepadApp_SendKeysToBinds(keyCode, 1, false);
         switch (switchType) {
         case ON_OFF_SWITCH_TYPE_TOGGLE:
         case ON_OFF_SWITCH_TYPE_MOMENTARY:
@@ -397,27 +387,28 @@ static void zclFreePadApp_ReportBattery(void) {
     LREP("Battery voltageZCL=%d prc=%d voltage=%d\r\n", zclFreePadApp_BatteryVoltage, zclFreePadApp_BatteryPercentageRemainig,
          getBatteryVoltage());
 
-    #if BDB_REPORTING
-        bdb_RepChangedAttrValue(1, ZCL_CLUSTER_ID_GEN_POWER_CFG, ATTRID_POWER_CFG_BATTERY_PERCENTAGE_REMAINING);
-    #else
-        const uint8 NUM_ATTRIBUTES = 2;
-        zclReportCmd_t *pReportCmd;
-        pReportCmd = osal_mem_alloc(sizeof(zclReportCmd_t) + (NUM_ATTRIBUTES * sizeof(zclReport_t)));
-        if (pReportCmd != NULL) {
-            pReportCmd->numAttr = NUM_ATTRIBUTES;
+#if BDB_REPORTING
+    bdb_RepChangedAttrValue(1, ZCL_CLUSTER_ID_GEN_POWER_CFG, ATTRID_POWER_CFG_BATTERY_PERCENTAGE_REMAINING);
+#else
+    const uint8 NUM_ATTRIBUTES = 2;
+    zclReportCmd_t *pReportCmd;
+    pReportCmd = osal_mem_alloc(sizeof(zclReportCmd_t) + (NUM_ATTRIBUTES * sizeof(zclReport_t)));
+    if (pReportCmd != NULL) {
+        pReportCmd->numAttr = NUM_ATTRIBUTES;
 
-            pReportCmd->attrList[0].attrID = ATTRID_POWER_CFG_BATTERY_VOLTAGE;
-            pReportCmd->attrList[0].dataType = ZCL_DATATYPE_UINT8;
-            pReportCmd->attrList[0].attrData = (void *)(&zclFreePadApp_BatteryVoltage);
+        pReportCmd->attrList[0].attrID = ATTRID_POWER_CFG_BATTERY_VOLTAGE;
+        pReportCmd->attrList[0].dataType = ZCL_DATATYPE_UINT8;
+        pReportCmd->attrList[0].attrData = (void *)(&zclFreePadApp_BatteryVoltage);
 
-            pReportCmd->attrList[1].attrID = ATTRID_POWER_CFG_BATTERY_PERCENTAGE_REMAINING;
-            pReportCmd->attrList[1].dataType = ZCL_DATATYPE_UINT8;
-            pReportCmd->attrList[1].attrData = (void *)(&zclFreePadApp_BatteryPercentageRemainig);
+        pReportCmd->attrList[1].attrID = ATTRID_POWER_CFG_BATTERY_PERCENTAGE_REMAINING;
+        pReportCmd->attrList[1].dataType = ZCL_DATATYPE_UINT8;
+        pReportCmd->attrList[1].attrData = (void *)(&zclFreePadApp_BatteryPercentageRemainig);
 
-            zcl_SendReportCmd(1, &inderect_DstAddr, ZCL_CLUSTER_ID_GEN_POWER_CFG, pReportCmd, ZCL_FRAME_CLIENT_SERVER_DIR, TRUE, bdb_getZCLFrameCounter());
-        }
-        osal_mem_free(pReportCmd);
-    #endif
+        zcl_SendReportCmd(1, &inderect_DstAddr, ZCL_CLUSTER_ID_GEN_POWER_CFG, pReportCmd, ZCL_FRAME_CLIENT_SERVER_DIR, TRUE,
+                          bdb_getZCLFrameCounter());
+    }
+    osal_mem_free(pReportCmd);
+#endif
 }
 
 static void zclFreePadApp_RestoreAttributesFromNV(void) {

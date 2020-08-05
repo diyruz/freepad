@@ -10,6 +10,18 @@
                 <project>GenericApp</project>
                 <configuration>DIYRuZ_FreePad</configuration>
             </member>
+            <member>
+                <project>GenericApp</project>
+                <configuration>DIYRuZ_FreePad_PM3</configuration>
+            </member>
+            <member>
+                <project>GenericApp</project>
+                <configuration>DIYRuZ_FreePad_TL</configuration>
+            </member>
+            <member>
+                <project>GenericApp</project>
+                <configuration>DIYRuZ_FreePad_TL_PM3</configuration>
+            </member>
         </batchDefinition>
     </batchBuild>
 </workspace>

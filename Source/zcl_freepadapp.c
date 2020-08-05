@@ -330,7 +330,7 @@ static void zclFreePadApp_HandleKeys(byte shift, byte keyCode) {
 
     if (keyCode == HAL_KEY_CODE_RELEASE_KEY) {
         zclFactoryResetter_HandleKeys(0x40, keyCode);
-        osal_start_timerEx(zclFreePadApp_TaskID, FREEPADAPP_REPORT_EVT, 20 * 1000);
+        osal_start_timerEx(zclFreePadApp_TaskID, FREEPADAPP_REPORT_EVT, 3 * 1000);
 #ifdef FREEPAD_ENABLE_TL
         osal_stop_timerEx(zclFreePadApp_TaskID, FREEPADAPP_TL_START_EVT);
 #endif
@@ -396,7 +396,28 @@ static void zclFreePadApp_ReportBattery(void) {
 
     LREP("Battery voltageZCL=%d prc=%d voltage=%d\r\n", zclFreePadApp_BatteryVoltage, zclFreePadApp_BatteryPercentageRemainig,
          getBatteryVoltage());
-    bdb_RepChangedAttrValue(1, ZCL_CLUSTER_ID_GEN_POWER_CFG, ATTRID_POWER_CFG_BATTERY_PERCENTAGE_REMAINING);
+
+    #if BDB_REPORTING
+        bdb_RepChangedAttrValue(1, ZCL_CLUSTER_ID_GEN_POWER_CFG, ATTRID_POWER_CFG_BATTERY_PERCENTAGE_REMAINING);
+    #else
+        const uint8 NUM_ATTRIBUTES = 2;
+        zclReportCmd_t *pReportCmd;
+        pReportCmd = osal_mem_alloc(sizeof(zclReportCmd_t) + (NUM_ATTRIBUTES * sizeof(zclReport_t)));
+        if (pReportCmd != NULL) {
+            pReportCmd->numAttr = NUM_ATTRIBUTES;
+
+            pReportCmd->attrList[0].attrID = ATTRID_POWER_CFG_BATTERY_VOLTAGE;
+            pReportCmd->attrList[0].dataType = ZCL_DATATYPE_UINT8;
+            pReportCmd->attrList[0].attrData = (void *)(&zclFreePadApp_BatteryVoltage);
+
+            pReportCmd->attrList[1].attrID = ATTRID_POWER_CFG_BATTERY_PERCENTAGE_REMAINING;
+            pReportCmd->attrList[1].dataType = ZCL_DATATYPE_UINT8;
+            pReportCmd->attrList[1].attrData = (void *)(&zclFreePadApp_BatteryPercentageRemainig);
+
+            zcl_SendReportCmd(1, &inderect_DstAddr, ZCL_CLUSTER_ID_GEN_POWER_CFG, pReportCmd, ZCL_FRAME_CLIENT_SERVER_DIR, TRUE, bdb_getZCLFrameCounter());
+        }
+        osal_mem_free(pReportCmd);
+    #endif
 }
 
 static void zclFreePadApp_RestoreAttributesFromNV(void) {

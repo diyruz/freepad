@@ -14,8 +14,9 @@
 /*********************************************************************
  * CONSTANTS
  */
-
 #define FREEPADAPP_DEVICE_VERSION 2
+
+
 #define FREEPADAPP_FLAGS 0
 
 #define FREEPADAPP_HWVERSION 1
@@ -41,7 +42,14 @@ uint8 zclFreePadApp_BatteryPercentageRemainig = 0xff;
 // Basic Cluster
 const uint8 zclFreePadApp_HWRevision = FREEPADAPP_HWVERSION;
 const uint8 zclFreePadApp_ZCLVersion = FREEPADAPP_ZCLVERSION;
-const uint8 zclFreePadApp_ApplicationVersion = 2;
+#ifdef PM3
+    const uint8 zclFreePadApp_ApplicationVersion = 3;
+#else
+    const uint8 zclFreePadApp_ApplicationVersion = 2;
+#endif
+
+
+
 const uint8 zclFreePadApp_StackVersion = 4;
 
 //{lenght, 'd', 'a', 't', 'a'}

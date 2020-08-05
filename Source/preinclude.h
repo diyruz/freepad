@@ -42,31 +42,15 @@
 #define BLINK_LEDS TRUE
 
 // one of this boards
-// #define HAL_BOARD_FREEPAD_20
-// #define HAL_BOARD_FREEPAD_12
-// #define HAL_BOARD_FREEPAD_8
-// #define HAL_BOARD_FREEPAD_3
-// #define HAL_BOARD_FREEPAD_2
-// #define HAL_BOARD_FREEPAD_1
+// #define HAL_BOARD_FREEPAD
 // #define HAL_BOARD_CHDTECH_DEV
 
-#if !defined(HAL_BOARD_FREEPAD_20) && !defined(HAL_BOARD_FREEPAD_12) && !defined(HAL_BOARD_FREEPAD_8) && !defined(HAL_BOARD_FREEPAD_3) &&  \
-    !defined(HAL_BOARD_FREEPAD_2) && !defined(HAL_BOARD_FREEPAD_1) && !defined(HAL_BOARD_CHDTECH_DEV)
+#if !defined(HAL_BOARD_FREEPAD) && !defined(HAL_BOARD_CHDTECH_DEV)
 #error "Board type must be defined"
 #endif
 
-#ifdef HAL_BOARD_FREEPAD_20
+#ifdef HAL_BOARD_FREEPAD
 #define FREEPAD_BUTTONS_COUNT 20
-#elif defined(HAL_BOARD_FREEPAD_12)
-#define FREEPAD_BUTTONS_COUNT 12
-#elif defined(HAL_BOARD_FREEPAD_8)
-#define FREEPAD_BUTTONS_COUNT 8
-#elif defined(HAL_BOARD_FREEPAD_3)
-#define FREEPAD_BUTTONS_COUNT 3
-#elif defined(HAL_BOARD_FREEPAD_2)
-#define FREEPAD_BUTTONS_COUNT 2
-#elif defined(HAL_BOARD_FREEPAD_1)
-#define FREEPAD_BUTTONS_COUNT 1
 #elif defined(HAL_BOARD_CHDTECH_DEV)
 #define FREEPAD_BUTTONS_COUNT 2
 #endif
@@ -79,8 +63,7 @@
 #undef APS_MAX_GROUPS
 #define APS_MAX_GROUPS 1
 
-#if defined(HAL_BOARD_FREEPAD_20) || defined(HAL_BOARD_FREEPAD_12) || defined(HAL_BOARD_FREEPAD_8) || defined(HAL_BOARD_FREEPAD_3) ||      \
-    defined(HAL_BOARD_FREEPAD_2) || defined(HAL_BOARD_FREEPAD_1)
+#if defined(HAL_BOARD_FREEPAD)
 #define POWER_SAVING
 #endif
 

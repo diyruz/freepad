@@ -8,31 +8,7 @@
             <name>FREEPADS</name>
             <member>
                 <project>GenericApp</project>
-                <configuration>FREEPAD_1</configuration>
-            </member>
-            <member>
-                <project>GenericApp</project>
-                <configuration>FREEPAD_2</configuration>
-            </member>
-            <member>
-                <project>GenericApp</project>
-                <configuration>FREEPAD_3</configuration>
-            </member>
-            <member>
-                <project>GenericApp</project>
-                <configuration>FREEPAD_8</configuration>
-            </member>
-            <member>
-                <project>GenericApp</project>
-                <configuration>FREEPAD_12</configuration>
-            </member>
-            <member>
-                <project>GenericApp</project>
-                <configuration>FREEPAD_20</configuration>
-            </member>
-            <member>
-                <project>GenericApp</project>
-                <configuration>CHDTECH_DEV</configuration>
+                <configuration>DIYRuZ_FreePad</configuration>
             </member>
         </batchDefinition>
     </batchBuild>

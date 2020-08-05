@@ -258,6 +258,6 @@ byte zclFreePadApp_KeyCodeToButton(byte key) {
 void zclFreePadApp_ResetAttributesToDefaultValues(void) {
     for (uint8 i = 0; i < FREEPAD_BUTTONS_COUNT; i++) {
         zclFreePadApp_SwitchActions[i] = ON_OFF_SWITCH_ACTIONS_TOGGLE;
-        zclFreePadApp_SwitchTypes[i] = ON_OFF_SWITCH_TYPE_MULTIFUNCTION;
+        zclFreePadApp_SwitchTypes[i] = ON_OFF_SWITCH_TYPE_MOMENTARY;
     }
 }

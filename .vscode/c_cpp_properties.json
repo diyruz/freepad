@@ -2,7 +2,7 @@
     "configurations": [{
         "name": "Mac",
         "forcedInclude": ["${workspaceRoot}/Source/preinclude.h"],
-        "defines": ["HAL_BOARD_FREEPAD", "HAL_UART=TRUE"],
+        "defines": ["HAL_BOARD_FREEPAD", "HAL_UART=TRUE", "FREEPAD_ENABLE_TL"],
         "includePath": [
             "${workspaceRoot}",
             "${env:ZSTACK_PATH}/Components/mac/include/",

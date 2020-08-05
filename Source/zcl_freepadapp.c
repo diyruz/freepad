@@ -360,7 +360,7 @@ static void zclFreePadApp_HandleKeys(byte shift, byte keyCode) {
 
 #ifdef FREEPAD_ENABLE_TL
         if (button == 2) {
-            osal_start_timerEx(zclFreePadApp_TaskID, FREEPADAPP_TL_START_EVT, TLHoldTime);
+            osal_start_timerEx(zclFreePadApp_TaskID, FREEPADAPP_TL_START_EVT, FREEPADAPP_TL_START_DELAY);
         }
 #endif
         uint8 switchType = zclFreePadApp_SwitchTypes[button - 1];

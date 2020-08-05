@@ -104,7 +104,7 @@
 
 
 #ifndef INT_HEAP_LEN
-#define INT_HEAP_LEN 2688
+#define INT_HEAP_LEN 2900
 #endif
 
 #include "hal_board_cfg.h"

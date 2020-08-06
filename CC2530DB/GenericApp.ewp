@@ -3728,7 +3728,7 @@
                     <name>CCDefines</name>
                     <state>HAL_BOARD_FREEPAD</state>
                     <state>FREEPAD_ENABLE_TL</state>
-                    <state>PM3</state>
+                    <state>BDB_REPORTING=TRUE</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -4869,7 +4869,7 @@
                 <option>
                     <name>CCDefines</name>
                     <state>HAL_BOARD_FREEPAD</state>
-                    <state>PM3</state>
+                    <state>BDB_REPORTING=TRUE</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>

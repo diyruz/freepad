@@ -36,16 +36,14 @@
 
 // Global attributes
 const uint16 zclFreePadApp_clusterRevision_all = 0x0001;
-uint8 zclFreePadApp_BatteryVoltage = 0xff;
-uint8 zclFreePadApp_BatteryPercentageRemainig = 0xff;
 
 // Basic Cluster
 const uint8 zclFreePadApp_HWRevision = FREEPADAPP_HWVERSION;
 const uint8 zclFreePadApp_ZCLVersion = FREEPADAPP_ZCLVERSION;
-#ifdef PM3
-    const uint8 zclFreePadApp_ApplicationVersion = 3;
-#else
+#if BDB_REPORTING
     const uint8 zclFreePadApp_ApplicationVersion = 2;
+#else
+    const uint8 zclFreePadApp_ApplicationVersion = 3;
 #endif
 
 
@@ -63,7 +61,7 @@ uint8 zclFreePadApp_SwitchTypes[FREEPAD_BUTTONS_COUNT];
 /*********************************************************************
  * ATTRIBUTE DEFINITIONS - Uses REAL cluster IDs
  */
-#define R ACCESS_CONTROL_READ
+#define R               ACCESS_CONTROL_READ
 #define RR              R | ACCESS_REPORTABLE
 #define RW              (R | ACCESS_CONTROL_WRITE | ACCESS_CONTROL_AUTH_WRITE)
 #define BASIC           ZCL_CLUSTER_ID_GEN_BASIC
@@ -83,8 +81,8 @@ CONST zclAttrRec_t zclFreePadApp_AttrsFirstEP[] = {
     {BASIC, {ATTRID_BASIC_POWER_SOURCE, ZCL_DATATYPE_ENUM8, R, (void *)&zclFreePadApp_PowerSource}},
     {BASIC, {ATTRID_BASIC_SW_BUILD_ID, ZCL_UINT8, R, (void *)&zclFreePadApp_ApplicationVersion}},
     {BASIC, {ATTRID_CLUSTER_REVISION, ZCL_DATATYPE_UINT16, R, (void *)&zclFreePadApp_clusterRevision_all}},
-    {POWER_CFG, {ATTRID_POWER_CFG_BATTERY_VOLTAGE, ZCL_UINT8, RR, (void *)&zclFreePadApp_BatteryVoltage}},
-    {POWER_CFG, {ATTRID_POWER_CFG_BATTERY_PERCENTAGE_REMAINING, ZCL_UINT8, RR, (void *)&zclFreePadApp_BatteryPercentageRemainig}},
+    {POWER_CFG, {ATTRID_POWER_CFG_BATTERY_VOLTAGE, ZCL_UINT8, RR, (void *)&zclBattery_Voltage}},
+    {POWER_CFG, {ATTRID_POWER_CFG_BATTERY_PERCENTAGE_REMAINING, ZCL_UINT8, RR, (void *)&zclBattery_PercentageRemainig}},
     {SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_TYPE, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchTypes[0]}},
     {SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_ACTIONS, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchActions[0]}}};
 

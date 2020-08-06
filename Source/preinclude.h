@@ -21,9 +21,7 @@
 
 #define ZCL_REPORTING_DEVICE
 //TODO: PM3 refactor z2m converters
-#ifndef PM3
-    #define BDB_REPORTING TRUE
-#endif
+// #define BDB_REPORTING
 // #define FREEPAD_ENABLE_TL
 #ifdef FREEPAD_ENABLE_TL
 #define INTER_PAN

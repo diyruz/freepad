@@ -26,10 +26,9 @@ extern "C" {
 
 
 #define FREEPADAPP_SEND_KEYS_EVT    0x0001
-#define FREEPADAPP_REPORT_EVT       0x0002
-#define FREEPADAPP_HOLD_START_EVT   0x0004
-#define FREEPADAPP_SAVE_ATTRS_EVT   0x0008
-#define FREEPADAPP_TL_START_EVT     0x0010
+#define FREEPADAPP_HOLD_START_EVT   0x0002
+#define FREEPADAPP_SAVE_ATTRS_EVT   0x0004
+#define FREEPADAPP_TL_START_EVT     0x0008
 
 #define FREEPADAPP_SEND_KEYS_DELAY 250
 #define FREEPADAPP_HOLD_START_DELAY (FREEPADAPP_SEND_KEYS_DELAY + 750)
@@ -60,8 +59,7 @@ extern uint8 zclFreePadApp_SwitchTypes[];
 
 
 extern SimpleDescriptionFormat_t zclFreePadApp_SimpleDescs[];
-extern uint8 zclFreePadApp_BatteryVoltage;
-extern uint8 zclFreePadApp_BatteryPercentageRemainig;
+
 
 
 // attribute list

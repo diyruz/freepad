@@ -17,6 +17,7 @@
 #include "zcl_freepadapp.h"
 #include "commissioning.h"
 #include "factory_reset.h"
+#include "battery.h"
 #include "Debug.h"
 
 const pTaskEventHandlerFn tasksArr[] = {macEventLoop,
@@ -32,7 +33,8 @@ const pTaskEventHandlerFn tasksArr[] = {macEventLoop,
                                         bdb_event_loop,
                                         zclFreePadApp_event_loop,
                                         zclCommissioning_event_loop,
-                                        zclFactoryResetter_loop
+                                        zclFactoryResetter_loop,
+                                        zclBattery_event_loop
                                         };
 
 const uint8 tasksCnt = sizeof(tasksArr) / sizeof(tasksArr[0]);
@@ -58,6 +60,7 @@ void osalInitTasks(void) {
     zclFreePadApp_Init(taskID++);
     zclCommissioning_Init(taskID++);
     zclFactoryResetter_Init(taskID++);
+    zclBattery_Init(taskID++);
 }
 
 /*********************************************************************

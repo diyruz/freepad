@@ -16,7 +16,6 @@
  */
 #define FREEPADAPP_DEVICE_VERSION 2
 
-
 #define FREEPADAPP_FLAGS 0
 
 #define FREEPADAPP_HWVERSION 1
@@ -40,14 +39,7 @@ const uint16 zclFreePadApp_clusterRevision_all = 0x0001;
 // Basic Cluster
 const uint8 zclFreePadApp_HWRevision = FREEPADAPP_HWVERSION;
 const uint8 zclFreePadApp_ZCLVersion = FREEPADAPP_ZCLVERSION;
-#if BDB_REPORTING
-    const uint8 zclFreePadApp_ApplicationVersion = 2;
-#else
-    const uint8 zclFreePadApp_ApplicationVersion = 3;
-#endif
-
-
-
+const uint8 zclFreePadApp_ApplicationVersion = BDB_REPORTING ? 2 : 3;
 const uint8 zclFreePadApp_StackVersion = 4;
 
 //{lenght, 'd', 'a', 't', 'a'}
@@ -61,16 +53,16 @@ uint8 zclFreePadApp_SwitchTypes[FREEPAD_BUTTONS_COUNT];
 /*********************************************************************
  * ATTRIBUTE DEFINITIONS - Uses REAL cluster IDs
  */
-#define R               ACCESS_CONTROL_READ
-#define RR              R | ACCESS_REPORTABLE
-#define RW              (R | ACCESS_CONTROL_WRITE | ACCESS_CONTROL_AUTH_WRITE)
-#define BASIC           ZCL_CLUSTER_ID_GEN_BASIC
-#define POWER_CFG       ZCL_CLUSTER_ID_GEN_POWER_CFG
-#define SWITCH_CONFIG   ZCL_CLUSTER_ID_GEN_ON_OFF_SWITCH_CONFIG
-#define ZCL_UINT8       ZCL_DATATYPE_UINT8
+#define R ACCESS_CONTROL_READ
+#define RR R | ACCESS_REPORTABLE
+#define RW (R | ACCESS_CONTROL_WRITE | ACCESS_CONTROL_AUTH_WRITE)
+#define BASIC ZCL_CLUSTER_ID_GEN_BASIC
+#define POWER_CFG ZCL_CLUSTER_ID_GEN_POWER_CFG
+#define SWITCH_CONFIG ZCL_CLUSTER_ID_GEN_ON_OFF_SWITCH_CONFIG
+#define ON_OFF ZCL_CLUSTER_ID_GEN_ON_OFF
+#define MS_INP_BASIC ZCL_CLUSTER_ID_GEN_MULTISTATE_INPUT_BASIC
+#define ZCL_UINT8 ZCL_DATATYPE_UINT8
 
-const uint16 zclSampleLight_clusterRevision_all = 0x0001;
-uint16 zclSampleLight_IdentifyTime = 10;
 
 CONST zclAttrRec_t zclFreePadApp_AttrsFirstEP[] = {
     {BASIC, {ATTRID_BASIC_ZCL_VERSION, ZCL_UINT8, R, (void *)&zclFreePadApp_ZCLVersion}},
@@ -87,30 +79,8 @@ CONST zclAttrRec_t zclFreePadApp_AttrsFirstEP[] = {
     {POWER_CFG, {ATTRID_POWER_CFG_BATTERY_VOLTAGE, ZCL_UINT8, RR, (void *)&zclBattery_Voltage}},
     {POWER_CFG, {ATTRID_POWER_CFG_BATTERY_PERCENTAGE_REMAINING, ZCL_UINT8, RR, (void *)&zclBattery_PercentageRemainig}},
 
-
-      // *** Identify Cluster Attribute ***
-  {
-    ZCL_CLUSTER_ID_GEN_IDENTIFY,
-    { // Attribute record
-      ATTRID_IDENTIFY_TIME,
-      ZCL_DATATYPE_UINT16,
-      (ACCESS_CONTROL_READ | ACCESS_CONTROL_WRITE),
-      (void *)&zclSampleLight_IdentifyTime
-    }
-  },
-  {
-    ZCL_CLUSTER_ID_GEN_IDENTIFY,
-    {  // Attribute record
-      ATTRID_CLUSTER_REVISION,
-      ZCL_DATATYPE_UINT16,
-      ACCESS_CONTROL_READ,
-      (void *)&zclSampleLight_clusterRevision_all
-    }
-  },  
-
     {SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_TYPE, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchTypes[0]}},
     {SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_ACTIONS, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchActions[0]}}};
-
 
 CONST zclAttrRec_t zclFreePadApp_Attrs[][FREEPAD_ATTRS_COUNT] = {
 
@@ -118,7 +88,7 @@ CONST zclAttrRec_t zclFreePadApp_Attrs[][FREEPAD_ATTRS_COUNT] = {
      {SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_ACTIONS, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchActions[1]}}},
     {{SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_TYPE, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchTypes[2]}},
 
-    {SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_ACTIONS, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchActions[2]}}},
+     {SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_ACTIONS, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchActions[2]}}},
     {{SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_TYPE, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchTypes[3]}},
      {SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_ACTIONS, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchActions[3]}}},
 
@@ -132,8 +102,8 @@ CONST zclAttrRec_t zclFreePadApp_Attrs[][FREEPAD_ATTRS_COUNT] = {
      {SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_ACTIONS, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchActions[6]}}},
 
     {{SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_TYPE, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchTypes[7]}},
-     {SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_ACTIONS, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchActions[7]}}}
-    ,
+     {SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_ACTIONS, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchActions[7]}}},
+
     {{SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_TYPE, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchTypes[8]}},
      {SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_ACTIONS, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchActions[8]}}},
 
@@ -144,8 +114,8 @@ CONST zclAttrRec_t zclFreePadApp_Attrs[][FREEPAD_ATTRS_COUNT] = {
      {SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_ACTIONS, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchActions[10]}}},
 
     {{SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_TYPE, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchTypes[11]}},
-     {SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_ACTIONS, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchActions[11]}}}
-    ,
+     {SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_ACTIONS, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchActions[11]}}},
+
     {{SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_TYPE, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchTypes[12]}},
      {SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_ACTIONS, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchActions[12]}}},
 
@@ -173,18 +143,18 @@ CONST zclAttrRec_t zclFreePadApp_Attrs[][FREEPAD_ATTRS_COUNT] = {
 };
 uint8 CONST zclFreePadApp_AttrsFirstEPCount = (sizeof(zclFreePadApp_AttrsFirstEP) / sizeof(zclFreePadApp_AttrsFirstEP[0]));
 
-const cId_t zclSampleSw_InClusterList[] = {ZCL_CLUSTER_ID_GEN_BASIC};
+const cId_t zclFreePadApp_InClusterList[] = {ZCL_CLUSTER_ID_GEN_BASIC};
 
-#define ZCLSAMPLESW_MAX_INCLUSTERS (sizeof(zclSampleSw_InClusterList) / sizeof(zclSampleSw_InClusterList[0]))
+#define FREEPAD_MAX_INCLUSTERS (sizeof(zclFreePadApp_InClusterList) / sizeof(zclFreePadApp_InClusterList[0]))
 
-const cId_t zclSampleSw_OutClusterListOdd[] = {ZCL_CLUSTER_ID_GEN_ON_OFF, ZCL_CLUSTER_ID_GEN_MULTISTATE_INPUT_BASIC};
-const cId_t zclSampleSw_OutClusterListNth14[] = {ZCL_CLUSTER_ID_GEN_ON_OFF, ZCL_CLUSTER_ID_GEN_LEVEL_CONTROL,
-                                                 ZCL_CLUSTER_ID_LIGHTING_COLOR_CONTROL, ZCL_CLUSTER_ID_GEN_MULTISTATE_INPUT_BASIC};
-const cId_t zclSampleSw_OutClusterListEven[] = {ZCL_CLUSTER_ID_GEN_ON_OFF, ZCL_CLUSTER_ID_GEN_MULTISTATE_INPUT_BASIC};
+const cId_t zclFreePadApp_OutClusterListOdd[] = {ON_OFF, MS_INP_BASIC};
+const cId_t zclFreePadApp_OutClusterListNth14[] = {ON_OFF, MS_INP_BASIC, ZCL_CLUSTER_ID_GEN_LEVEL_CONTROL,
+                                                 ZCL_CLUSTER_ID_LIGHTING_COLOR_CONTROL};
+const cId_t zclFreePadApp_OutClusterListEven[] = {ON_OFF, MS_INP_BASIC};
 
-#define ZCLSAMPLESW_MAX_OUTCLUSTERS_NTH14 (sizeof(zclSampleSw_OutClusterListNth14) / sizeof(zclSampleSw_OutClusterListNth14[0]))
-#define ZCLSAMPLESW_MAX_OUTCLUSTERS_EVEN (sizeof(zclSampleSw_OutClusterListEven) / sizeof(zclSampleSw_OutClusterListEven[0]))
-#define ZCLSAMPLESW_MAX_OUTCLUSTERS_ODD (sizeof(zclSampleSw_OutClusterListOdd) / sizeof(zclSampleSw_OutClusterListOdd[0]))
+#define FREEPAD_MAX_OUTCLUSTERS_NTH14 (sizeof(zclFreePadApp_OutClusterListNth14) / sizeof(zclFreePadApp_OutClusterListNth14[0]))
+#define FREEPAD_MAX_OUTCLUSTERS_EVEN (sizeof(zclFreePadApp_OutClusterListEven) / sizeof(zclFreePadApp_OutClusterListEven[0]))
+#define FREEPAD_MAX_OUTCLUSTERS_ODD (sizeof(zclFreePadApp_OutClusterListOdd) / sizeof(zclFreePadApp_OutClusterListOdd[0]))
 
 SimpleDescriptionFormat_t zclFreePadApp_SimpleDescs[FREEPAD_BUTTONS_COUNT];
 void zclFreePadApp_InitClusters(void) {
@@ -197,26 +167,25 @@ void zclFreePadApp_InitClusters(void) {
         zclFreePadApp_SimpleDescs[i].Reserved = FREEPADAPP_FLAGS; // AF_V1_SUPPORT uses for AppFlags:4.
 
         if (endPoint == 1) {
-            zclFreePadApp_SimpleDescs[i].AppNumInClusters = ZCLSAMPLESW_MAX_INCLUSTERS;
-            zclFreePadApp_SimpleDescs[i].pAppInClusterList = (cId_t *)zclSampleSw_InClusterList;
+            zclFreePadApp_SimpleDescs[i].AppNumInClusters = FREEPAD_MAX_INCLUSTERS;
+            zclFreePadApp_SimpleDescs[i].pAppInClusterList = (cId_t *)zclFreePadApp_InClusterList;
         } else {
             zclFreePadApp_SimpleDescs[i].AppNumInClusters = 0;
             zclFreePadApp_SimpleDescs[i].pAppInClusterList = (cId_t *)NULL;
         }
 
         if (endPoint % 4 == 1) { // every 1 in 4
-            zclFreePadApp_SimpleDescs[i].AppNumOutClusters = ZCLSAMPLESW_MAX_OUTCLUSTERS_NTH14;
-            zclFreePadApp_SimpleDescs[i].pAppOutClusterList = (cId_t *)zclSampleSw_OutClusterListNth14;
+            zclFreePadApp_SimpleDescs[i].AppNumOutClusters = FREEPAD_MAX_OUTCLUSTERS_NTH14;
+            zclFreePadApp_SimpleDescs[i].pAppOutClusterList = (cId_t *)zclFreePadApp_OutClusterListNth14;
         } else if (endPoint % 2 == 0) {
-            zclFreePadApp_SimpleDescs[i].AppNumOutClusters = ZCLSAMPLESW_MAX_OUTCLUSTERS_EVEN;
-            zclFreePadApp_SimpleDescs[i].pAppOutClusterList = (cId_t *)zclSampleSw_OutClusterListEven;
+            zclFreePadApp_SimpleDescs[i].AppNumOutClusters = FREEPAD_MAX_OUTCLUSTERS_EVEN;
+            zclFreePadApp_SimpleDescs[i].pAppOutClusterList = (cId_t *)zclFreePadApp_OutClusterListEven;
         } else {
-            zclFreePadApp_SimpleDescs[i].AppNumOutClusters = ZCLSAMPLESW_MAX_OUTCLUSTERS_ODD;
-            zclFreePadApp_SimpleDescs[i].pAppOutClusterList = (cId_t *)zclSampleSw_OutClusterListOdd;
+            zclFreePadApp_SimpleDescs[i].AppNumOutClusters = FREEPAD_MAX_OUTCLUSTERS_ODD;
+            zclFreePadApp_SimpleDescs[i].pAppOutClusterList = (cId_t *)zclFreePadApp_OutClusterListOdd;
         }
     }
 }
-
 
 byte zclFreePadApp_KeyCodeToButton(byte key) {
     switch (key) {

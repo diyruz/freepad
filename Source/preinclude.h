@@ -18,14 +18,14 @@
 #define ZCL_IDENTIFY
 #define ZCL_ON_OFF
 #define ZCL_LEVEL_CTRL
-
 #define ZCL_REPORTING_DEVICE
+
 //TODO: PM3 refactor z2m converters
 // #define BDB_REPORTING
 // #define FREEPAD_ENABLE_TL
 #ifdef FREEPAD_ENABLE_TL
-#define INTER_PAN
-#define BDB_TL_INITIATOR
+    #define INTER_PAN
+    #define BDB_TL_INITIATOR
 #endif
 
 

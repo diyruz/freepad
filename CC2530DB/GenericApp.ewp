@@ -175,7 +175,7 @@
                 </option>
                 <option>
                     <name>General Xdata Stack Size</name>
-                    <state>0x380</state>
+                    <state>0x500</state>
                 </option>
                 <option>
                     <name>General Ext Stack Size</name>
@@ -306,6 +306,7 @@
                 <option>
                     <name>CCDefines</name>
                     <state>HAL_BOARD_CHDTECH_DEV</state>
+                    <state>FREEPAD_ENABLE_TL</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -1315,7 +1316,7 @@
                 </option>
                 <option>
                     <name>General Xdata Stack Size</name>
-                    <state>0x380</state>
+                    <state>0x500</state>
                 </option>
                 <option>
                     <name>General Ext Stack Size</name>
@@ -1446,6 +1447,7 @@
                 <option>
                     <name>CCDefines</name>
                     <state>HAL_BOARD_FREEPAD</state>
+                    <state>BDB_REPORTING</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -3728,7 +3730,6 @@
                     <name>CCDefines</name>
                     <state>HAL_BOARD_FREEPAD</state>
                     <state>FREEPAD_ENABLE_TL</state>
-                    <state>BDB_REPORTING=TRUE</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -4869,7 +4870,6 @@
                 <option>
                     <name>CCDefines</name>
                     <state>HAL_BOARD_FREEPAD</state>
-                    <state>BDB_REPORTING=TRUE</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -6302,6 +6302,12 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\zstack-lib\hal_key.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\zstack-lib\tl_resetter.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\zstack-lib\tl_resetter.h</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\zstack-lib\utils.c</name>

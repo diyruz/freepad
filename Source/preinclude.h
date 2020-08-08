@@ -45,65 +45,50 @@
 // #define HAL_BOARD_CHDTECH_DEV
 
 #if !defined(HAL_BOARD_FREEPAD) && !defined(HAL_BOARD_CHDTECH_DEV)
-#error "Board type must be defined"
+    #error "Board type must be defined"
 #endif
 
-#ifdef HAL_BOARD_FREEPAD
+#define INT_HEAP_LEN 3000
+
 #define FREEPAD_BUTTONS_COUNT 20
-#elif defined(HAL_BOARD_CHDTECH_DEV)
-#define FREEPAD_BUTTONS_COUNT 2
-#endif
-
-#ifdef NWK_MAX_BINDING_ENTRIES
-#undef NWK_MAX_BINDING_ENTRIES
-#endif
-#define NWK_MAX_BINDING_ENTRIES MAX(10, ((2 * FREEPAD_BUTTONS_COUNT)))
-
-#undef APS_MAX_GROUPS
-#define APS_MAX_GROUPS 1
 
 #if defined(HAL_BOARD_FREEPAD)
-#define POWER_SAVING
+    #define POWER_SAVING
 #endif
 
 
 #if defined(HAL_BOARD_CHDTECH_DEV)
-#define DO_DEBUG_UART
+    // #define DO_DEBUG_UART
+    // #define OSALMEM_METRICS TRUE
 #endif
 
 #ifdef DO_DEBUG_UART
-#define HAL_UART TRUE
-#define HAL_UART_DMA 1
-#define INT_HEAP_LEN (2685 - 0x4B - 0xBB)
+    #define HAL_UART TRUE
+    #define HAL_UART_DMA 1
+    #define INT_HEAP_LEN 2197
 #endif
 
 #ifdef DO_DEBUG_MT
-#define HAL_UART TRUE
-#define HAL_UART_DMA 1
-#define HAL_UART_ISR 2
-#define INT_HEAP_LEN (2688-0xC4-0x15-0x44-0x20-0x1E)
+    #define HAL_UART TRUE
+    #define HAL_UART_DMA 1
+    #define HAL_UART_ISR 2
+    #define INT_HEAP_LEN (2688-0xC4-0x15-0x44-0x20-0x1E)
 
-#define MT_TASK
+    #define MT_TASK
 
-#define MT_UTIL_FUNC
-#define MT_UART_DEFAULT_BAUDRATE HAL_UART_BR_115200
-#define MT_UART_DEFAULT_OVERFLOW FALSE
+    #define MT_UTIL_FUNC
+    #define MT_UART_DEFAULT_BAUDRATE HAL_UART_BR_115200
+    #define MT_UART_DEFAULT_OVERFLOW FALSE
 
-#define ZTOOL_P1
+    #define ZTOOL_P1
 
-#define MT_APP_FUNC
-#define MT_APP_CNF_FUNC
-#define MT_SYS_FUNC
-#define MT_ZDO_FUNC
-#define MT_ZDO_MGMT
-#define MT_DEBUG_FUNC
-
+    #define MT_APP_FUNC
+    #define MT_APP_CNF_FUNC
+    #define MT_SYS_FUNC
+    #define MT_ZDO_FUNC
+    #define MT_ZDO_MGMT
+    #define MT_DEBUG_FUNC
 #endif
 
-
-
-#ifndef INT_HEAP_LEN
-#define INT_HEAP_LEN 2900
-#endif
 
 #include "hal_board_cfg.h"

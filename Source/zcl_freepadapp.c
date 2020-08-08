@@ -17,15 +17,12 @@
 
 #include "bdb.h"
 #include "bdb_interface.h"
-#ifdef FREEPAD_ENABLE_TL
-#include "bdb_touchlink.h"
-#include "bdb_touchlink_initiator.h"
-#endif
 
 #include "Debug.h"
 #include "commissioning.h"
 #include "factory_reset.h"
 #include "onboard.h"
+#include "tl_resetter.h"
 
 /* HAL */
 #include "hal_drivers.h"
@@ -81,10 +78,6 @@ static void zclFreePadApp_BasicResetCB(void);
 static ZStatus_t zclFreePadApp_ReadWriteAuthCB(afAddrType_t *srcAddr, zclAttrRec_t *pAttr, uint8 oper);
 static void zclFreePadApp_SaveAttributesToNV(void);
 static void zclFreePadApp_RestoreAttributesFromNV(void);
-#ifdef FREEPAD_ENABLE_TL
-static void zclFreePadApp_StartTL(void);
-ZStatus_t zclFreePadApp_TL_NotifyCb(epInfoRec_t *pData);
-#endif
 /*********************************************************************
  * ZCL General Profile Callback table
  */
@@ -141,10 +134,6 @@ void zclFreePadApp_Init(byte task_id) {
 
     // Register for all key events - This app will handle all key events
     RegisterForKeys(zclFreePadApp_TaskID);
-
-#ifdef FREEPAD_ENABLE_TL
-    touchLinkInitiator_RegisterNotifyTLCB(zclFreePadApp_TL_NotifyCb);
-#endif
 
     LREP("Started build %s \r\n", zclFreePadApp_DateCodeNT);
     ZMacSetTransmitPower(TX_PWR_PLUS_4); // set 4dBm
@@ -273,14 +262,6 @@ uint16 zclFreePadApp_event_loop(uint8 task_id, uint16 events) {
         zclFreePadApp_SaveAttributesToNV();
         return (events ^ FREEPADAPP_SAVE_ATTRS_EVT);
     }
-#ifdef FREEPAD_ENABLE_TL
-    if (events & FREEPADAPP_TL_START_EVT) {
-        LREPMaster("FREEPADAPP_TL_START_EVT\r\n");
-        HalLedSet(HAL_LED_1, HAL_LED_MODE_FLASH);
-        zclFreePadApp_StartTL();
-        return (events ^ FREEPADAPP_TL_START_EVT);
-    }
-#endif
     // Discard unknown events
     return 0;
 }
@@ -313,11 +294,9 @@ static void zclFreePadApp_HandleKeys(byte shift, byte keyCode) {
     prevKeyCode = keyCode;
 
     if (keyCode == HAL_KEY_CODE_RELEASE_KEY) {
-        zclFactoryResetter_HandleKeys(0x40, keyCode);
-        zclBattery_HandleKeys(0x40, keyCode);
-#ifdef FREEPAD_ENABLE_TL
-        osal_stop_timerEx(zclFreePadApp_TaskID, FREEPADAPP_TL_START_EVT);
-#endif
+        zclFactoryResetter_HandleKeys(HAL_KEY_RELEASE, keyCode);
+        zclBattery_HandleKeys(HAL_KEY_RELEASE, keyCode);
+        zclTouchLinkRestter_HandleKeys(HAL_KEY_RELEASE, keyCode);
         byte prevButton = zclFreePadApp_KeyCodeToButton(currentKeyCode);
         uint8 prevSwitchType = zclFreePadApp_SwitchTypes[prevButton - 1];
 
@@ -339,14 +318,14 @@ static void zclFreePadApp_HandleKeys(byte shift, byte keyCode) {
 
     } else {
         byte button = zclFreePadApp_KeyCodeToButton(keyCode);
+        // TODO: implement proper keys task
         zclCommissioning_HandleKeys(HAL_KEY_PRESS, keyCode);
-        zclFactoryResetter_HandleKeys(HAL_KEY_PRESS, keyCode);
-
-#ifdef FREEPAD_ENABLE_TL
-        if (button == 2) {
-            osal_start_timerEx(zclFreePadApp_TaskID, FREEPADAPP_TL_START_EVT, FREEPADAPP_TL_START_DELAY);
+        if (button == 1) {
+            zclFactoryResetter_HandleKeys(HAL_KEY_PRESS, keyCode);
         }
-#endif
+
+        zclTouchLinkRestter_HandleKeys(HAL_KEY_PRESS, button);
+
         uint8 switchType = zclFreePadApp_SwitchTypes[button - 1];
 
         HalLedSet(HAL_LED_1, HAL_LED_MODE_BLINK);
@@ -373,8 +352,6 @@ static void zclFreePadApp_HandleKeys(byte shift, byte keyCode) {
     }
 }
 
-
-
 static void zclFreePadApp_RestoreAttributesFromNV(void) {
     LREPMaster("Restoring attributes to NV\r\n");
 
@@ -399,16 +376,5 @@ static void zclFreePadApp_SaveAttributesToNV(void) {
     }
 }
 
-#ifdef FREEPAD_ENABLE_TL
-static void zclFreePadApp_StartTL(void) {
-    LREPMaster("zclFreePadApp_StartTL\r\n");
-    touchLinkInitiator_StartDevDisc();
-}
-
-ZStatus_t zclFreePadApp_TL_NotifyCb(epInfoRec_t *pData) {
-    LREPMaster("zclFreePadApp_TL_NotifyCb\r\n");
-    return touchLinkInitiator_ResetToFNSelectedTarget();
-}
-#endif
 /****************************************************************************
 ****************************************************************************/

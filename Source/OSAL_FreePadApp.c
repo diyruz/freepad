@@ -12,13 +12,14 @@
 #ifdef FREEPAD_ENABLE_TL
 #include "bdb_touchlink_initiator.h"
 #include "stub_aps.h"
+#include "tl_resetter.h"
 #endif
 
-#include "zcl_freepadapp.h"
+#include "Debug.h"
+#include "battery.h"
 #include "commissioning.h"
 #include "factory_reset.h"
-#include "battery.h"
-#include "Debug.h"
+#include "zcl_freepadapp.h"
 
 const pTaskEventHandlerFn tasksArr[] = {macEventLoop,
                                         nwk_event_loop,
@@ -26,16 +27,20 @@ const pTaskEventHandlerFn tasksArr[] = {macEventLoop,
                                         APS_event_loop,
                                         ZDApp_event_loop,
                                         zcl_event_loop,
-                                        #ifdef FREEPAD_ENABLE_TL
+#ifdef FREEPAD_ENABLE_TL
                                         StubAPS_ProcessEvent,
                                         touchLinkInitiator_event_loop,
-                                        #endif
+#endif
                                         bdb_event_loop,
                                         zclFreePadApp_event_loop,
                                         zclCommissioning_event_loop,
                                         zclFactoryResetter_loop,
                                         zclBattery_event_loop
-                                        };
+#ifdef FREEPAD_ENABLE_TL
+                                        ,
+                                        zclTouchLinkRestter_event_loop
+#endif
+};
 
 const uint8 tasksCnt = sizeof(tasksArr) / sizeof(tasksArr[0]);
 uint16 *tasksEvents;
@@ -52,15 +57,18 @@ void osalInitTasks(void) {
     APS_Init(taskID++);
     ZDApp_Init(taskID++);
     zcl_Init(taskID++);
-    #ifdef FREEPAD_ENABLE_TL
+#ifdef FREEPAD_ENABLE_TL
     StubAPS_Init(taskID++);
     touchLinkInitiator_Init(taskID++);
-    #endif
+#endif
     bdb_Init(taskID++);
     zclFreePadApp_Init(taskID++);
     zclCommissioning_Init(taskID++);
     zclFactoryResetter_Init(taskID++);
     zclBattery_Init(taskID++);
+#ifdef FREEPAD_ENABLE_TL
+    zclTouchLinkRestter_Init(taskID++);
+#endif
 }
 
 /*********************************************************************

@@ -69,6 +69,9 @@ uint8 zclFreePadApp_SwitchTypes[FREEPAD_BUTTONS_COUNT];
 #define SWITCH_CONFIG   ZCL_CLUSTER_ID_GEN_ON_OFF_SWITCH_CONFIG
 #define ZCL_UINT8       ZCL_DATATYPE_UINT8
 
+const uint16 zclSampleLight_clusterRevision_all = 0x0001;
+uint16 zclSampleLight_IdentifyTime = 10;
+
 CONST zclAttrRec_t zclFreePadApp_AttrsFirstEP[] = {
     {BASIC, {ATTRID_BASIC_ZCL_VERSION, ZCL_UINT8, R, (void *)&zclFreePadApp_ZCLVersion}},
     {BASIC, {ATTRID_BASIC_APPL_VERSION, ZCL_UINT8, R, (void *)&zclFreePadApp_ApplicationVersion}},
@@ -83,6 +86,28 @@ CONST zclAttrRec_t zclFreePadApp_AttrsFirstEP[] = {
     {BASIC, {ATTRID_CLUSTER_REVISION, ZCL_DATATYPE_UINT16, R, (void *)&zclFreePadApp_clusterRevision_all}},
     {POWER_CFG, {ATTRID_POWER_CFG_BATTERY_VOLTAGE, ZCL_UINT8, RR, (void *)&zclBattery_Voltage}},
     {POWER_CFG, {ATTRID_POWER_CFG_BATTERY_PERCENTAGE_REMAINING, ZCL_UINT8, RR, (void *)&zclBattery_PercentageRemainig}},
+
+
+      // *** Identify Cluster Attribute ***
+  {
+    ZCL_CLUSTER_ID_GEN_IDENTIFY,
+    { // Attribute record
+      ATTRID_IDENTIFY_TIME,
+      ZCL_DATATYPE_UINT16,
+      (ACCESS_CONTROL_READ | ACCESS_CONTROL_WRITE),
+      (void *)&zclSampleLight_IdentifyTime
+    }
+  },
+  {
+    ZCL_CLUSTER_ID_GEN_IDENTIFY,
+    {  // Attribute record
+      ATTRID_CLUSTER_REVISION,
+      ZCL_DATATYPE_UINT16,
+      ACCESS_CONTROL_READ,
+      (void *)&zclSampleLight_clusterRevision_all
+    }
+  },  
+
     {SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_TYPE, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchTypes[0]}},
     {SWITCH_CONFIG, {ATTRID_ON_OFF_SWITCH_ACTIONS, ZCL_DATATYPE_ENUM8, RW, (void *)&zclFreePadApp_SwitchActions[0]}}};
 

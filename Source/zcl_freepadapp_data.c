@@ -39,7 +39,10 @@ const uint16 zclFreePadApp_clusterRevision_all = 0x0001;
 // Basic Cluster
 const uint8 zclFreePadApp_HWRevision = FREEPADAPP_HWVERSION;
 const uint8 zclFreePadApp_ZCLVersion = FREEPADAPP_ZCLVERSION;
-const uint8 zclFreePadApp_ApplicationVersion = BDB_REPORTING ? 2 : 3;
+const uint8 zclFreePadApp_ApplicationVersion = 3;
+#if BDB_REPORTING
+    zclFreePadApp_ApplicationVersion = 2;
+#endif
 const uint8 zclFreePadApp_StackVersion = 4;
 
 //{lenght, 'd', 'a', 't', 'a'}

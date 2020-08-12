@@ -48,8 +48,13 @@
     #error "Board type must be defined"
 #endif
 
-#define INT_HEAP_LEN 3000
+#if defined(FREEPAD_ENABLE_TL) && BDB_REPORTING
+    #define INT_HEAP_LEN (3000 - 0x38)
+#endif
 
+#ifndef INT_HEAP_LEN
+    #define INT_HEAP_LEN 3000
+#endif
 #define FREEPAD_BUTTONS_COUNT 20
 
 #if defined(HAL_BOARD_FREEPAD)

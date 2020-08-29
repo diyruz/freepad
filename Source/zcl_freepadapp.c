@@ -225,6 +225,12 @@ uint16 zclFreePadApp_event_loop(uint8 task_id, uint16 events) {
                 zclFreePadApp_HandleKeys(((keyChange_t *)MSGpkt)->state, ((keyChange_t *)MSGpkt)->keys);
                 break;
 
+            case ZCL_INCOMING_MSG:
+                if (((zclIncomingMsg_t *)MSGpkt)->attrCmd) {
+                    osal_mem_free(((zclIncomingMsg_t *)MSGpkt)->attrCmd);
+                }
+                break;
+
             default:
                 break;
             }

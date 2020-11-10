@@ -334,7 +334,7 @@ static void zclFreePadApp_HandleKeys(byte shift, byte keyCode) {
 
         uint8 switchType = zclFreePadApp_SwitchTypes[button - 1];
 
-        HalLedSet(HAL_LED_1, HAL_LED_MODE_BLINK);
+        HalLedSet(HAL_LED_2, HAL_LED_MODE_BLINK);
         pressTime = osal_getClock();
 
         currentKeyCode = keyCode;

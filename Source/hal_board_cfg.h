@@ -146,8 +146,8 @@ extern void MAC_RfFrontendSetup(void);
   PREFETCH_ENABLE();                                            \
   HAL_TURN_OFF_LED1();                                           \
   LED1_DDR |= LED1_BV;                                           \
-  /*HAL_TURN_OFF_LED2();     */                                      \
-  /*LED2_DDR |= LED2_BV;         */                                  \
+  HAL_TURN_OFF_LED2();                                           \
+  LED2_DDR |= LED2_BV;                                           \
 }
 
 /* ----------- Debounce ---------- */
@@ -168,6 +168,11 @@ extern void MAC_RfFrontendSetup(void);
   #define LED1_SBIT         P0_1
   #define LED1_DDR          P0DIR
   #define LED1_POLARITY     ACTIVE_HIGH
+  #define LED2_BV           BV(1)
+  #define LED2_SBIT         P0_1
+  #define LED2_DDR          P0DIR
+  #define LED2_POLARITY     ACTIVE_HIGH
+
 #elif defined(HAL_BOARD_LETV)
 /* 1 - P1_0 Red */
   #define LED1_BV           BV(0)
@@ -179,55 +184,41 @@ extern void MAC_RfFrontendSetup(void);
   #define LED2_SBIT         P1_1
   #define LED2_DDR          P1DIR
   #define LED2_POLARITY     ACTIVE_LOW
+
 #elif defined(HAL_BOARD_CHDTECH_DEV)
 /* 1 - P1_0 Зеленый */
   #define LED1_BV           BV(0)
   #define LED1_SBIT         P1_0
   #define LED1_DDR          P1DIR
   #define LED1_POLARITY     ACTIVE_LOW
+/* 1 - P1_0 Зеленый */
+  #define LED2_BV           BV(0)
+  #define LED2_SBIT         P1_0
+  #define LED2_DDR          P1DIR
+  #define LED2_POLARITY     ACTIVE_LOW
 #endif
 
-#if defined(HAL_BOARD_FREEPAD) || defined(HAL_BOARD_CHDTECH_DEV)
-  #define HAL_TURN_OFF_LED1()       st( LED1_SBIT = LED1_POLARITY (0); )
-  #define HAL_TURN_OFF_LED2()       asm("NOP")
-  #define HAL_TURN_OFF_LED3()       asm("NOP")
-  #define HAL_TURN_OFF_LED4()       asm("NOP")
 
-  #define HAL_TURN_ON_LED1()        st( LED1_SBIT = LED1_POLARITY (1); )
-  #define HAL_TURN_ON_LED2()        asm("NOP")
-  #define HAL_TURN_ON_LED3()        asm("NOP")
-  #define HAL_TURN_ON_LED4()        asm("NOP")
+#define HAL_TURN_OFF_LED1()       st( LED1_SBIT = LED1_POLARITY (0); )
+#define HAL_TURN_OFF_LED2()       st( LED2_SBIT = LED2_POLARITY (0); )
+#define HAL_TURN_OFF_LED3()       asm("NOP")
+#define HAL_TURN_OFF_LED4()       asm("NOP")
 
-  #define HAL_TOGGLE_LED1()         st( if (LED1_SBIT) { LED1_SBIT = 0; } else { LED1_SBIT = 1;} )
-  #define HAL_TOGGLE_LED2()         asm("NOP")
-  #define HAL_TOGGLE_LED3()         asm("NOP")
-  #define HAL_TOGGLE_LED4()         asm("NOP")
+#define HAL_TURN_ON_LED1()        st( LED1_SBIT = LED1_POLARITY (1); )
+#define HAL_TURN_ON_LED2()        st( LED2_SBIT = LED2_POLARITY (1); )
+#define HAL_TURN_ON_LED3()        asm("NOP")
+#define HAL_TURN_ON_LED4()        asm("NOP")
 
-  #define HAL_STATE_LED1()          (LED1_POLARITY (LED1_SBIT))
-  #define HAL_STATE_LED2()          0
-  #define HAL_STATE_LED3()          0
-  #define HAL_STATE_LED4()          0
-#elif defined(HAL_BOARD_LETV)
-  #define HAL_TURN_OFF_LED1()       st( LED1_SBIT = LED1_POLARITY (0); )
-  #define HAL_TURN_OFF_LED2()       st( LED2_SBIT = LED2_POLARITY (0); )
-  #define HAL_TURN_OFF_LED3()       asm("NOP")
-  #define HAL_TURN_OFF_LED4()       asm("NOP")
+#define HAL_TOGGLE_LED1()         st( if (LED1_SBIT) { LED1_SBIT = 0; } else { LED1_SBIT = 1;} )
+#define HAL_TOGGLE_LED2()         st( if (LED2_SBIT) { LED2_SBIT = 0; } else { LED2_SBIT = 1;} )
+#define HAL_TOGGLE_LED3()         asm("NOP")
+#define HAL_TOGGLE_LED4()         asm("NOP")
 
-  #define HAL_TURN_ON_LED1()        st( LED1_SBIT = LED1_POLARITY (1); )
-  #define HAL_TURN_ON_LED2()        st( LED2_SBIT = LED2_POLARITY (1); )
-  #define HAL_TURN_ON_LED3()        asm("NOP")
-  #define HAL_TURN_ON_LED4()        asm("NOP")
+#define HAL_STATE_LED1()          (LED1_POLARITY (LED1_SBIT))
+#define HAL_STATE_LED2()          (LED2_POLARITY (LED2_SBIT))
+#define HAL_STATE_LED3()          0
+#define HAL_STATE_LED4()          0
 
-  #define HAL_TOGGLE_LED1()         st( if (LED1_SBIT) { LED1_SBIT = 0; } else { LED1_SBIT = 1;} )
-  #define HAL_TOGGLE_LED2()         st( if (LED2_SBIT) { LED2_SBIT = 0; } else { LED2_SBIT = 1;} )
-  #define HAL_TOGGLE_LED3()         asm("NOP")
-  #define HAL_TOGGLE_LED4()         asm("NOP")
-
-  #define HAL_STATE_LED1()          (LED1_POLARITY (LED1_SBIT))
-  #define HAL_STATE_LED2()          (LED2_POLARITY (LED2_SBIT))
-  #define HAL_STATE_LED3()          0
-  #define HAL_STATE_LED4()          0
-#endif
 /* ----------- Minimum safe bus voltage ---------- */
 
 // Vdd/3 / Internal Reference X ENOB --> (Vdd / 3) / 1.15 X 127

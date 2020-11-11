@@ -16,11 +16,11 @@
             </member>
             <member>
                 <project>GenericApp</project>
-                <configuration>DIYRuZ_FreePad_TL</configuration>
+                <configuration>DIYRuZ_FreePad_TL_PM3</configuration>
             </member>
             <member>
                 <project>GenericApp</project>
-                <configuration>DIYRuZ_FreePad_TL_PM3</configuration>
+                <configuration>DIYRuZ_FreePad_LeTV_TL_PM3</configuration>
             </member>
         </batchDefinition>
     </batchBuild>

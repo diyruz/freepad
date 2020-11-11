@@ -58,13 +58,8 @@
 #endif
 #define FREEPAD_BUTTONS_COUNT 20
 
-#if defined(HAL_BOARD_FREEPAD)
+#if defined(HAL_BOARD_FREEPAD) || defined(HAL_BOARD_LETV)
     #define POWER_SAVING
-#endif
-
-#if defined(HAL_BOARD_LETV)
-    // #define DO_DEBUG_UART
-    // #define OSALMEM_METRICS TRUE
 #endif
 
 #if defined(HAL_BOARD_CHDTECH_DEV)

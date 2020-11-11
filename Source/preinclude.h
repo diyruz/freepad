@@ -42,9 +42,10 @@
 
 // one of this boards
 // #define HAL_BOARD_FREEPAD
+// #define HAL_BOARD_LETV
 // #define HAL_BOARD_CHDTECH_DEV
 
-#if !defined(HAL_BOARD_FREEPAD) && !defined(HAL_BOARD_CHDTECH_DEV)
+#if !defined(HAL_BOARD_FREEPAD) && !defined(HAL_BOARD_CHDTECH_DEV) && !defined(HAL_BOARD_LETV)
     #error "Board type must be defined"
 #endif
 
@@ -61,6 +62,10 @@
     #define POWER_SAVING
 #endif
 
+#if defined(HAL_BOARD_LETV)
+    // #define DO_DEBUG_UART
+    // #define OSALMEM_METRICS TRUE
+#endif
 
 #if defined(HAL_BOARD_CHDTECH_DEV)
     // #define DO_DEBUG_UART

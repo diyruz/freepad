@@ -37,6 +37,20 @@
 #if defined(HAL_BOARD_FREEPAD)
 #define HAL_KEY_P0_GPIO_PINS (HAL_KEY_BIT2 | HAL_KEY_BIT3 | HAL_KEY_BIT4 | HAL_KEY_BIT5 | HAL_KEY_BIT6)
 #define HAL_KEY_P0_INPUT_PINS (HAL_KEY_BIT2 | HAL_KEY_BIT3 | HAL_KEY_BIT4 | HAL_KEY_BIT5 | HAL_KEY_BIT6)
+
+#elif defined(HAL_BOARD_LETV)
+#define HAL_KEY_P0_GPIO_PINS (HAL_KEY_BIT0 | HAL_KEY_BIT1 | HAL_KEY_BIT2 | HAL_KEY_BIT3 | HAL_KEY_BIT4 | HAL_KEY_BIT5 | HAL_KEY_BIT6 | HAL_KEY_BIT7)
+#define HAL_KEY_P1_GPIO_PINS 0x00
+#define HAL_KEY_P2_GPIO_PINS 0x00
+
+#define HAL_KEY_P0_INPUT_PINS (HAL_KEY_BIT0 | HAL_KEY_BIT1 | HAL_KEY_BIT2 | HAL_KEY_BIT3 | HAL_KEY_BIT4 | HAL_KEY_BIT5 | HAL_KEY_BIT6 | HAL_KEY_BIT7)
+#define HAL_KEY_P1_INPUT_PINS 0x00
+#define HAL_KEY_P2_INPUT_PINS 0x00
+
+#define HAL_KEY_P0_INTERRUPT_PINS (HAL_KEY_BIT0 | HAL_KEY_BIT1 | HAL_KEY_BIT2 | HAL_KEY_BIT3 | HAL_KEY_BIT4 | HAL_KEY_BIT5 | HAL_KEY_BIT6 | HAL_KEY_BIT7)
+#define HAL_KEY_P1_INTERRUPT_PINS 0x00
+#define HAL_KEY_P2_INTERRUPT_PINS 0x00
+
 #elif defined(HAL_BOARD_CHDTECH_DEV)
 #define HAL_KEY_P0_GPIO_PINS (HAL_KEY_BIT1)
 #define HAL_KEY_P1_GPIO_PINS 0x00
@@ -105,6 +119,12 @@ void HalKeyInit(void) {
     P0INP &= ~HAL_KEY_P0_INPUT_PINS; // pull pins
     P2INP |= HAL_KEY_BIT5;           // pull down port0
     HAL_BOARD_DELAY_USEC(50);
+    
+#elif defined(HAL_BOARD_LETV)
+    P0DIR &= ~(HAL_KEY_P0_INPUT_PINS);
+    P1DIR &= ~(HAL_KEY_P1_INPUT_PINS);
+    P2DIR &= ~(HAL_KEY_P2_INPUT_PINS);
+
 #elif defined(HAL_BOARD_CHDTECH_DEV)
     P0DIR &= ~(HAL_KEY_P0_INPUT_PINS);
     P1DIR &= ~(HAL_KEY_P1_INPUT_PINS);
@@ -126,6 +146,11 @@ void HalKeyConfig(bool interruptEnable, halKeyCBack_t cback) {
     PICTL &= ~HAL_KEY_BIT0; // set rising edge on port 0
                             // enable intrupt on row pins
     IEN1 |= HAL_KEY_BIT5;   // enable port0 int
+    
+#elif defined(HAL_BOARD_LETV)
+    PICTL |= HAL_KEY_BIT0; // set falling edge on port 0
+    IEN1 |= HAL_KEY_BIT5;                 // enable port0 int
+
 #elif defined(HAL_BOARD_CHDTECH_DEV)
     PICTL |= HAL_KEY_BIT0 | HAL_KEY_BIT3; // set falling edge on port 0 and 2
     IEN1 |= HAL_KEY_BIT5;                 // enable port0 int
@@ -175,8 +200,36 @@ uint8 HalKeyRead(void) {
         key = (((row << 2) | col >> 1)) >> 1;
     }
     // LREP("row %d col %d key 0x%X %d \r\n", row, col, key, key);
+    
+#elif defined(HAL_BOARD_LETV)
+    
+    if (ACTIVE_LOW(P0 & HAL_KEY_BIT0)) {
+        key = 0x01;  // P00 
+    }
+    if (ACTIVE_LOW(P0 & HAL_KEY_BIT1)) {
+        key = 0x02;  // P01 
+    }
+    if (ACTIVE_LOW(P0 & HAL_KEY_BIT2)) {
+        key = 0x03;  // P02 
+    }
+    if (ACTIVE_LOW(P0 & HAL_KEY_BIT3)) {
+        key = 0x04;  // P03 
+    }
+    if (ACTIVE_LOW(P0 & HAL_KEY_BIT4)) {
+        key = 0x05;  // P04 
+    }
+    if (ACTIVE_LOW(P0 & HAL_KEY_BIT5)) {
+        key = 0x06;  // P05 
+    }
+    if (ACTIVE_LOW(P0 & HAL_KEY_BIT6)) {
+        key = 0x07;  // P06 
+    }
+    if (ACTIVE_LOW(P0 & HAL_KEY_BIT7)) {
+        key = 0x08;  // P07
+    }
+   
 #elif defined(HAL_BOARD_CHDTECH_DEV)
-
+    
     if (ACTIVE_LOW(P0 & HAL_KEY_P0_INPUT_PINS)) {
         key = 0x01;
     }
@@ -184,6 +237,7 @@ uint8 HalKeyRead(void) {
     if (ACTIVE_LOW(P2 & HAL_KEY_P2_INPUT_PINS)) {
         key = 0x02;
     }
+ 
 #endif
 
     return key;

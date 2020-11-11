@@ -235,6 +235,23 @@ byte zclFreePadApp_KeyCodeToButton(byte key) {
         return 19;
     case 0x88: // row=64 col=32
         return 20;
+#elif defined(HAL_BOARD_LETV)
+    case 0x1: // 1
+        return 1;
+    case 0x2: // 2
+        return 2;
+    case 0x3: // 3
+        return 3;
+    case 0x4: // 4
+        return 4;
+    case 0x5: // 5
+        return 5;
+    case 0x6: // 6
+        return 6;
+    case 0x7: // 7
+        return 7;
+    case 0x8: // 8
+        return 8;
 #elif defined(HAL_BOARD_CHDTECH_DEV)
     case 0x1: // row=4 col=4
         return 1;

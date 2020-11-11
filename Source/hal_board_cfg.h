@@ -180,7 +180,7 @@ extern void MAC_RfFrontendSetup(void);
   #define LED1_DDR          P1DIR
   #define LED1_POLARITY     ACTIVE_LOW
 /* 2 - P1_1 Green */
-  #define LED2_BV           BV(0)
+  #define LED2_BV           BV(1)
   #define LED2_SBIT         P1_1
   #define LED2_DDR          P1DIR
   #define LED2_POLARITY     ACTIVE_LOW

@@ -49,7 +49,12 @@ const uint8 zclFreePadApp_StackVersion = 4;
 
 //{lenght, 'd', 'a', 't', 'a'}
 const uint8 zclFreePadApp_ManufacturerName[] = {9, 'm', 'o', 'd', 'k', 'a', 'm', '.', 'r', 'u'};
+#if defined(HAL_BOARD_LETV)
+const uint8 zclFreePadApp_ModelId[] = {14, 'F', 'r', 'e', 'e', 'P', 'a', 'd', '_', 'L', 'e', 'T', 'V', '_', '8'};
+#else
 const uint8 zclFreePadApp_ModelId[] = {14, 'D', 'I', 'Y', 'R', 'u', 'Z', '_', 'F', 'r', 'e', 'e', 'P', 'a', 'd'};
+#endif
+
 const uint8 zclFreePadApp_PowerSource = POWER_SOURCE_BATTERY;
 
 uint8 zclFreePadApp_SwitchActions[FREEPAD_BUTTONS_COUNT];

@@ -3,4 +3,3 @@ git:
 github:
   release: true
   assets: ["firmwares/DIYRuZ_*.hex"]
-  draft: true

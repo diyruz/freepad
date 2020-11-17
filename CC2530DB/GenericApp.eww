@@ -22,6 +22,22 @@
                 <project>GenericApp</project>
                 <configuration>DIYRuZ_FreePad_LeTV_TL_PM3</configuration>
             </member>
+            <member>
+                <project>GenericApp</project>
+                <configuration>DIYRuZ_FreePad_LeTV</configuration>
+            </member>
+            <member>
+                <project>GenericApp</project>
+                <configuration>DIYRuZ_FreePad_LeTV_PM3</configuration>
+            </member>
+            <member>
+                <project>GenericApp</project>
+                <configuration>DIYRuZ_FreePad_LeTV_TL</configuration>
+            </member>
+            <member>
+                <project>GenericApp</project>
+                <configuration>DIYRuZ_FreePad_TL</configuration>
+            </member>
         </batchDefinition>
     </batchBuild>
 </workspace>

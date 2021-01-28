@@ -1,5 +1,3 @@
-# Zigbee Universal Remote v2
-
 ![](/images/orig-freepad/v2/19.jpg)  
 
 The first version of the Zigbee remote control is good, but this option is not suitable when mobility is needed. For this reason, a second version appeared, in which Jager tried to make a more compact version.

@@ -31,7 +31,7 @@ The keypad is supported in:
 
 ## Settings
 In zigbee2mqtt you could change setting at Exposes tab.
-![](./images/z2m_exposes.png)
+![](/images/z2m_exposes.png)
 
 ### Work modes
 By default remote works as custom switch, with multiple clicks, but this behavior has own drawback.

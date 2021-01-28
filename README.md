@@ -1,7 +1,12 @@
 # Freepad
 
 Freepad is an open source Zigbee remote intended to be used to have a customizable keypad to control your smart home devices.  
-Read more here: https://modkam.ru/?p=1264
+
+There are different hardware versions of the console.
+More details on the links:
+* [Freepad v1](https://github.com/diyruz/freepad/README_FREEPAD_v1.md)
+* [Freepad v2](https://github.com/diyruz/freepad/README_FREEPAD_v2.md)
+* [LeTV mod](https://github.com/diyruz/freepad/README_FREEPAD_LETV.md)
 
 ## Features list:
 1. Single/double/tripple/quadriple/many_x/hold&release
@@ -11,29 +16,28 @@ Read more here: https://modkam.ru/?p=1264
 5. Bindings configuration
 6. Remote reset
 
-
 ## How to join:
+1. Press and hold the *first* button for 3-10 seconds (depending on whether the device is connected to the network) until the LED on the device flashes.
+2. Wait, if the connection is successful, the device will blink 5 times.
+3. If the connection fails, the device will blink 3 times.
 
-1. Press and hold *first* button for 3-10 seconds(depends whter or not device is on a network), until device start flashing led
-2. Wait, in case of successfull join, device will flash led 5 times
-3. If join failed, device will flash led 3 times
+***Find button mapping at project page***
 
-## How to use touch link
- Deprecated due to memory issues, you can use `FREEPAD_ENABLE_TL` macros if you want to compile with TL functionality
+### Support
+The keypad is supported in:
+* zigbee2mqtt via int & ext converter
+* ioBroker
+* SLS Gateway
 
+## Settings
+In zigbee2mqtt you could change setting at Exposes tab.
+![](./images/z2m_exposes.png)
 
-## What's button mapping?
-![Here](/images/zigbee_keypad22.png)
-
-## How to add device into zigbe2mqtt
-Should be already in dev branch (as of 19-05-2020)
-
-
-
-## Work modes
-By default remote works as custom swith, with multiple clicks, this behaiviout has own drawback.
+### Work modes
+By default remote works as custom switch, with multiple clicks, but this behavior has own drawback.
 In order to detect multiple clicks, remote sends commands with 300ms delay.
-You can change this behaviour by cost of double/tripple/etc clicks. 
+You can change this behavior by cost of double/triple/etc clicks.
+
 To do that you need to change
 
 `ZCL_CLUSTER_ID_GEN_ON_OFF_SWITCH_CONFIG` cluster `ATTRID_ON_OFF_SWITCH_TYPE` attribute
@@ -53,8 +57,8 @@ mosquitto_pub -t "zigbee2mqtt/FN/BUTTON_NUM/set/switch_type" -m '2'
 ```
 
 
-## ONOFF cluster binding
-By default command is TOGGLE, but you can change this behaviour
+### ONOFF cluster binding
+By default command is TOGGLE, but you can change this behavior.
 
 Change `ZCL_CLUSTER_ID_GEN_ON_OFF_SWITCH_CONFIG` clusters attribute `ATTRID_ON_OFF_SWITCH_ACTIONS`
 
@@ -75,3 +79,7 @@ mosquitto_pub -t "zigbee2mqtt/FN/BUTTON_NUM/set/switch_actions" -m '1'
 ```bash
 mosquitto_pub -t "zigbee2mqtt/FN/BUTTON_NUM/set/switch_actions" -m '2'
 ```
+
+### Video
+[@Vlad_Kolobov](http://t.me/@MoNo320) recorded a video showing the speed in two modes
+[![video_speed_compare](https://img.youtube.com/vi/XvhNs9Tn12M/0.jpg)](https://www.youtube.com/watch?v=XvhNs9Tn12M)

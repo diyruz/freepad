@@ -23,7 +23,7 @@ Read more here: https://modkam.ru/?p=1264
 
 
 ## What's button mapping?
-![Here](./images/zigbee_keypad22.png)
+![Here](/images/zigbee_keypad22.png)
 
 ## How to add device into zigbe2mqtt
 Should be already in dev branch (as of 19-05-2020)

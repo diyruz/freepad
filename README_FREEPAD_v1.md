@@ -1,5 +1,3 @@
-# Zigbee Universal Remote v1
-
 ![](/images/orig-freepad/v1/14.jpg)  
 
 This is a kind of universal remote control, which displays the most frequently used functions in a particular room. This can be lighting control, multimedia equipment, various UD scenarios, etc.

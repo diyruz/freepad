@@ -15,8 +15,8 @@ using the Zigbee module from EBYTE E18-MS1-PCB
 compact buttons 3x4x2 mm
 ![](./images/orig-freepad/v2/2.jpg)  
 
-The board is wired in DiTrace
-![](./images/orig-freepad/v2/3.jpg)
+The board is wired in DiTrace  
+![](./images/orig-freepad/v2/3.jpg)  
 Note that the contact pads for the buttons are not designed for 4 pin buttons, as it might seem, these are options for a different offset from the center, due to the design of the case.
 
 Perforation is clearly visible on the renders, in these places unnecessary buttons are “broken off”. The very idea of ​​separating the excess is certainly not new, but those restrictions are imposed on the flight of thought. manufacturer's conditions. Instead of cutouts, Jager had to make holes with a diameter of 0.3 mm.
@@ -25,10 +25,10 @@ Perforation is clearly visible on the renders, in these places unnecessary butto
 Boards ordered in JLCPCB
 ![](./images/orig-freepad/v2/5.jpg)  
 
-Minimum soldering
+Minimum soldering  
 ![](./images/orig-freepad/v2/6.jpg)  
 
-Made a variant of the case for eight buttons in the form of a keychain
+Made a variant of the case for eight buttons in the form of a keychain. 
 ![](./images/orig-freepad/v2/7.jpg)  
 ![](./images/orig-freepad/v2/8.jpg)  
 ![](./images/orig-freepad/v2/9.jpg)  
@@ -37,31 +37,31 @@ Made a variant of the case for eight buttons in the form of a keychain
 The general idea is this, the insert on top of the board allows you to distribute the force over a larger area
 ![](./images/orig-freepad/v2/11.jpg)
 
-Printed on 3d printer
+Printed on 3d printer  
 ![](./images/orig-freepad/v2/12.jpg)
 
-First tried on
+First tried on  
 ![](./images/orig-freepad/v2/13.jpg)  
 
 The keyboard
 ![](./images/orig-freepad/v2/14.jpg)
 
-Different colors
+Different colors  
 ![](./images/orig-freepad/v2/15.jpg)
 
 Lamination will protect the paper keyboard
 
 ![](./images/orig-freepad/v2/16.jpg)  
 
-Remains only to cut and try
+Remains only to cut and try  
 ![](./images/orig-freepad/v2/17.jpg)  
 ![](./images/orig-freepad/v2/18.jpg)
 
-In scale
+In scale  
 ![](./images/orig-freepad/v2/19.jpg)  
 ![](./images/orig-freepad/v2/20.jpg)  
 
-Compared to first version
+Compared to first version  
 ![](./images/orig-freepad/v2/21.jpg)  
 
 From the software point of view, the consoles are identical.

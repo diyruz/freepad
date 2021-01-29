@@ -1,9 +1,9 @@
 ![](/images/letv-freepad/freepad_letv_12.png)
 
-Some time ago, digging TaoBao, I've found an interesting miniature ZigBee remote control keypad with eight buttons.
-As this device is powered by a CC2530 chip, an idea appeared in my head to flash it with a great [freepad](https://github.com/diyruz/freepad/) firmware, which was used in my previous remote controls.
+Some time ago, digging TaoBao, Jager has found an interesting miniature ZigBee remote control keypad with eight buttons.
+As this device is powered by a CC2530 chip, an idea appeared in Jager's head to flash it with a great [freepad](https://github.com/diyruz/freepad/) firmware, which was used in Jager's previous remote controls.
 
-UPD: This keypad has appeared on [Aliexpress](https://aliexpress.ru/item/1005001962088229.html?&sku_id=12000018238549831)
+UPD: This keypad has appeared on [AliExpress](https://aliexpress.ru/item/1005001962088229.html?&sku_id=12000018238549831)
 
 Keypad has 8 buttons, two-colored led, and is powered by CR2032 lithium cell.
 
@@ -34,7 +34,7 @@ As you can see, contacts are located in a pretty chaotic order. I don't wish to 
 
 ![](/images/letv-freepad/freepad_letv_8.png)
 
-The only thing you need to do is to upload the modified by [@xyzroe](https://t.me/xyzroe) version of freepad [firmware](https://github.com/diyruz/freepad/) with any 
+The only thing you need to do is to upload the modified by [@xyzroe](https://t.me/xyzroe) version of freepad [firmware](https://github.com/diyruz/freepad/) with any
 situated flashing [method](https://zigbee.wiki/books/%D0%BF%D1%80%D0%BE%D1%88%D0%B8%D0%B2%D0%BA%D0%B8/page/%D0%BF%D1%80%D0%BE%D1%88%D0%B8%D0%B2%D0%BA%D0%B0-cc2531cc2530).
 Zigbee2mqtt converter file is included in the package archive.
 
@@ -43,12 +43,14 @@ Here is how the device attached to the [SLS Gateway](https://slsys.github.io/Gat
 ![](/images/letv-freepad/freepad_letv_9.png)
 ![](/images/letv-freepad/freepad_letv_11.png)
 
-[Original post by Jager](https://modkam.ru/?p=1791)
+### What's button mapping?
+![](/images/letv-freepad/freepad_letv_but_map.png)
+
 
 ### Links
- - [DXF-file](https://www.dropbox.com/s/y3p7kqxyiqmid25/LeTV_pogopin.dxf?dl=0)  
+ - [DXF-file](https://github.com/diyruz/freepad/hardware/letv) by [Jager](https://t.me/Jager_f)  
    for DIY flashing adapter.
-   
+
 
  - [Freepad firmware releases](https://github.com/diyruz/freepad/releases/latest)  
    choose firmware hex file with __LeTV__ suffix.  
@@ -56,3 +58,5 @@ Here is how the device attached to the [SLS Gateway](https://slsys.github.io/Gat
 
  - [Flash instruction (in Russian)](https://zigbee.wiki/books/%D0%BF%D1%80%D0%BE%D1%88%D0%B8%D0%B2%D0%BA%D0%B8/page/%D0%BF%D1%80%D0%BE%D1%88%D0%B8%D0%B2%D0%BA%D0%B0-cc2531cc2530)  
    In Russian for now, but links and pictures are not less useful.
+
+[Original post by Jager](https://modkam.ru/?p=1791)

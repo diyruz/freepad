@@ -83,3 +83,10 @@ mosquitto_pub -t "zigbee2mqtt/FN/BUTTON_NUM/set/switch_actions" -m '2'
 ### Video
 [@Vlad_Kolobov](http://t.me/@MoNo320) recorded a video showing the speed in two modes
 [![video_speed_compare](https://img.youtube.com/vi/XvhNs9Tn12M/0.jpg)](https://www.youtube.com/watch?v=XvhNs9Tn12M)
+
+
+### Acronyms in firmware file names
+
+TL - touchlink
+
+PM3 - Power Mode 3 (External Interrupts): 0.4 μA

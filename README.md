@@ -6,7 +6,7 @@ There are different hardware versions of the console.
 More details on the links:
 * [Freepad v1](https://github.com/diyruz/freepad/README_FREEPAD_v1.md)
 * [Freepad v2](https://github.com/diyruz/freepad/README_FREEPAD_v2.md)
-* [LeTV mod](https://github.com/diyruz/freepad/README_FREEPAD_LETV.md)
+* [LeTV mod](https://github.com/diyruz/freepad/README_LETV.md)
 
 ## Features list:
 1. Single/double/tripple/quadriple/many_x/hold&release

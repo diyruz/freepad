@@ -1,6 +1,6 @@
 # Freepad
 
-Freepad is an open source Zigbee remote intended to be used to have a customizable keypad to control your smart home devices.  
+Freepad is an open-source Zigbee remote intended to be used to have a customizable keypad to control your smart home devices.  
 
 ## How to compile
 Follow this article https://zigdevwiki.github.io/Begin/IAR_install/
@@ -12,7 +12,7 @@ More details on the links:
 * [LeTV mod](https://github.com/diyruz/freepad/README_LETV.md)
 
 ## Features list:
-1. Single/double/tripple/quadriple/many_x/hold&release
+1. Single/double/triple/quadruple/many_x/hold&release
 2. Touchlink reset
 3. ONOFF bind
 4. Level control bind
@@ -33,13 +33,13 @@ The keypad is supported in:
 * SLS Gateway
 
 ## Settings
-In zigbee2mqtt you could change setting at Exposes tab.
+In zigbee2mqtt you could change the setting at Exposes tab.
 ![](/images/z2m_exposes.png)
 
 ### Work modes
-By default remote works as custom switch, with multiple clicks, but this behavior has own drawback.
-In order to detect multiple clicks, remote sends commands with 300ms delay.
-You can change this behavior by cost of double/triple/etc clicks.
+By default remote works as a custom switch, with multiple clicks, but this behaviour has its drawback.
+To detect multiple clicks, the remote sends commands with a 300ms delay.
+You can change this behaviour by the cost of double/triple/etc clicks.
 
 To do that you need to change
 
@@ -61,7 +61,7 @@ mosquitto_pub -t "zigbee2mqtt/FN/BUTTON_NUM/set/switch_type" -m '2'
 
 
 ### ONOFF cluster binding
-By default command is TOGGLE, but you can change this behavior.
+By default command is TOGGLE, but you can change this behaviour.
 
 Change `ZCL_CLUSTER_ID_GEN_ON_OFF_SWITCH_CONFIG` clusters attribute `ATTRID_ON_OFF_SWITCH_ACTIONS`
 

@@ -5,7 +5,7 @@ Freepad is an open source Zigbee remote intended to be used to have a customizab
 ## How to compile
 Follow this article https://zigdevwiki.github.io/Begin/IAR_install/
 
-There are different hardware versions of the console.
+## There are different hardware versions of the console.
 More details on the links:
 * [Freepad v1](https://github.com/diyruz/freepad/README_FREEPAD_v1.md)
 * [Freepad v2](https://github.com/diyruz/freepad/README_FREEPAD_v2.md)

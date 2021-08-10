@@ -31,7 +31,6 @@ The keypad is supported in:
 * zigbee2mqtt via int & ext converter
 * ioBroker
 * SLS Gateway
-* Deconz
 
 ## Settings
 In zigbee2mqtt you could change the setting at Exposes tab.
